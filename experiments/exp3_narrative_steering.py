@@ -44,6 +44,10 @@ from nla_steering.steering import (
 )
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("transformers").setLevel(logging.WARNING)
+logging.getLogger("huggingface_hub").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 console = Console()
 
@@ -109,7 +113,7 @@ def run(args: argparse.Namespace) -> None:
     logger.info("Loading model: %s", args.model)
     tokenizer = AutoTokenizer.from_pretrained(args.model, padding_side="left")
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, torch_dtype=torch.bfloat16, device_map=args.device
+        args.model, dtype=torch.bfloat16, device_map="auto"
     )
     model.eval()
 
@@ -127,7 +131,7 @@ def run(args: argparse.Namespace) -> None:
     results: list[dict] = []
 
     for exp in tqdm(EXPERIMENTS, desc="Experiments"):
-        enc = tokenizer(exp.prompt, return_tensors="pt").to(args.device)
+        enc = tokenizer(exp.prompt, return_tensors="pt").to(model.device)
 
         # Baseline generation
         with torch.no_grad():

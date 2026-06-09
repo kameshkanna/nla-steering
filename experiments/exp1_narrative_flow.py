@@ -32,6 +32,10 @@ from nla_steering.activation_extractor import extract_activations
 from nla_steering.nla_client import NLAVerbalizer
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("transformers").setLevel(logging.WARNING)
+logging.getLogger("huggingface_hub").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 console = Console()
 
@@ -68,7 +72,7 @@ def run(args: argparse.Namespace) -> None:
     logger.info("Loading model: %s", args.model)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, torch_dtype=torch.bfloat16, device_map=args.device
+        args.model, dtype=torch.bfloat16, device_map="auto"
     )
     model.eval()
 

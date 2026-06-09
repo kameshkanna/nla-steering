@@ -21,6 +21,7 @@ pip install --upgrade pip --quiet
 echo "==> Installing core dependencies"
 pip install --quiet \
     "torch>=2.3.0" \
+    "accelerate>=0.27.0" \
     "safetensors>=0.4.0" \
     "numpy>=1.26.0" \
     "httpx>=0.27.0" \

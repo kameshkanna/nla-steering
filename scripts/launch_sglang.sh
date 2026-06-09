@@ -22,6 +22,6 @@ echo "  Port       : $PORT"
 sglang serve --model-path "$CHECKPOINT" \
     --port "$PORT" \
     --dtype bfloat16 \
-    --mem-fraction-static 0.85 \
+    --mem-fraction-static 0.45 \
     --disable-cuda-graph \
     2>&1 | tee "logs/sglang_${PORT}.log"
