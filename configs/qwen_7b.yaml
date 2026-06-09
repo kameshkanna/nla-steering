@@ -1,0 +1,34 @@
+# Config for Qwen2.5-7B-Instruct + released NLA checkpoints
+# Update checkpoint paths to wherever you downloaded from HuggingFace/Neuronpedia
+
+model: Qwen/Qwen2.5-7B-Instruct
+device: cuda
+
+checkpoints:
+  av: /checkpoints/qwen2.5-7b-nla/av   # Activation Verbalizer
+  ar: /checkpoints/qwen2.5-7b-nla/ar   # Activation Reconstructor
+
+sglang:
+  av_url: http://localhost:30000
+  ar_url: http://localhost:30001        # Run AR on a separate port
+
+nla:
+  layer_idx: 20                         # From nla_meta.yaml — do not change
+  d_model: 3584
+
+experiments:
+  exp1:
+    layer_stride: 4                     # Probe every 4th layer
+    output: results/exp1_flow.jsonl
+
+  exp2:
+    steering_concepts: [sycophancy, honesty, refusal, confidence]
+    coefficients: [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+    caa_method: mean_diff
+    output: results/exp2_steering.jsonl
+
+  exp3:
+    narrative_coefficient: 1.0
+    caa_coefficient: 2.0
+    max_new_tokens: 200
+    output: results/exp3_narrative.jsonl
