@@ -36,23 +36,18 @@ class NarrativeSteerer:
     def __init__(
         self,
         ar_checkpoint_dir: str,
-        sglang_url: str = "http://localhost:30000",
-        device: str = "cpu",
+        tokenizer: PreTrainedTokenizerBase,
+        model: torch.nn.Module,
+        sglang_url: str = "http://localhost:30001",
     ) -> None:
-        try:
-            from nla_inference import NLAClient  # type: ignore[import]
-        except ImportError as e:
-            raise ImportError(
-                "nla_inference not found. Install from https://github.com/kitft/nla-inference"
-            ) from e
+        from nla_steering.nla_client import NLAMeta, NLAVerbalizer
 
-        self._ar_client = NLAClient(
-            checkpoint_dir=ar_checkpoint_dir,
-            sglang_url=sglang_url,
-            device=device,
-        )
-        self._layer_idx: int = self._ar_client.meta.layer_idx
-        self._d_model: int = self._ar_client.meta.d_model
+        self._meta = NLAMeta.from_checkpoint(ar_checkpoint_dir)
+        self._layer_idx: int = self._meta.layer_idx
+        self._d_model: int = self._meta.d_model
+        self._sglang_url = sglang_url.rstrip("/")
+        self._tokenizer = tokenizer
+        self._model = model
         logger.info(
             "NarrativeSteerer ready — layer=%d d_model=%d",
             self._layer_idx,
@@ -61,17 +56,44 @@ class NarrativeSteerer:
 
     def text_to_activation(self, description: str) -> np.ndarray:
         """
-        Run the AR to reconstruct an activation from a natural language description.
+        Call the AR SGLang server to reconstruct an activation from a description.
+        Uses the AR prompt template with the description injected.
 
         Returns:
             numpy array of shape (d_model,).
         """
-        return self._ar_client.reconstruct(description)
+        import httpx, orjson, re as _re
+
+        prompt_content = self._meta.ar_prompt_template.format(explanation=description)
+        ids: list[int] = self._tokenizer.apply_chat_template(
+            [{"role": "user", "content": prompt_content}],
+            tokenize=True,
+            add_generation_prompt=True,
+        )
+        embed_module = self._model.get_input_embeddings()
+        embed_weight = embed_module.weight.detach().float().cpu()
+        ids_tensor = torch.tensor(ids, dtype=torch.long)
+        embeds = embed_weight[ids_tensor].numpy().astype(np.float32)
+
+        payload = {
+            "input_embeds": embeds.tolist(),
+            "sampling_params": {"temperature": 0.0, "max_new_tokens": 1},
+            "return_hidden_states": True,
+        }
+        resp = httpx.post(
+            self._sglang_url + "/generate",
+            content=orjson.dumps(payload),
+            headers={"Content-Type": "application/json"},
+            timeout=60.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        # AR returns the activation at the last token position as hidden state
+        hidden = np.array(data["hidden_states"][-1], dtype=np.float32)
+        return hidden.squeeze()
 
     def compute_delta(
         self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizerBase,
         prompt: str,
         target_description: str,
     ) -> tuple[torch.Tensor, np.ndarray, np.ndarray]:
@@ -83,22 +105,22 @@ class NarrativeSteerer:
             (delta_tensor, original_activation, target_activation)
             delta_tensor: shape (d_model,), to be injected at self._layer_idx
         """
-        enc = tokenizer(prompt, return_tensors="pt").to(next(model.parameters()).device)
+        enc = self._tokenizer(prompt, return_tensors="pt").to(
+            next(self._model.parameters()).device
+        )
         activations = extract_activations(
-            model,
+            self._model,
             enc["input_ids"],
             [self._layer_idx],
             attention_mask=enc.get("attention_mask"),
         )
-        original = activations[self._layer_idx][0].cpu().numpy()  # (d_model,)
-        target = self.text_to_activation(target_description)      # (d_model,)
+        original = activations[self._layer_idx][0].cpu().numpy()
+        target = self.text_to_activation(target_description)
         delta = torch.from_numpy((target - original).astype(np.float32))
         return delta, original, target
 
     def steered_generate(
         self,
-        model: PreTrainedModel,
-        tokenizer: PreTrainedTokenizerBase,
         prompt: str,
         target_description: str,
         coefficient: float = 1.0,
@@ -108,14 +130,12 @@ class NarrativeSteerer:
         """
         Generate text with the model steered toward `target_description`.
 
-        Returns dict with keys:
-            - "baseline": generation without steering
-            - "steered": generation with narrative steering
-            - "original_description": (if AV provided, else empty)
-            - "target_description": the input description
+        Returns dict with keys: "baseline", "steered", "target_description".
         """
-        enc = tokenizer(prompt, return_tensors="pt").to(next(model.parameters()).device)
-        delta, _, _ = self.compute_delta(model, tokenizer, prompt, target_description)
+        enc = self._tokenizer(prompt, return_tensors="pt").to(
+            next(self._model.parameters()).device
+        )
+        delta, _, _ = self.compute_delta(prompt, target_description)
 
         gen_kwargs = dict(
             input_ids=enc["input_ids"],
@@ -126,17 +146,17 @@ class NarrativeSteerer:
         )
 
         with torch.no_grad():
-            baseline_ids = model.generate(**gen_kwargs)
+            baseline_ids = self._model.generate(**gen_kwargs)
 
         with torch.no_grad():
-            with steering_hook(model, self._layer_idx, delta, coefficient):
-                steered_ids = model.generate(**gen_kwargs)
+            with steering_hook(self._model, self._layer_idx, delta, coefficient):
+                steered_ids = self._model.generate(**gen_kwargs)
 
         prompt_len = enc["input_ids"].shape[1]
-        baseline_text = tokenizer.decode(
+        baseline_text = self._tokenizer.decode(
             baseline_ids[0][prompt_len:], skip_special_tokens=True
         )
-        steered_text = tokenizer.decode(
+        steered_text = self._tokenizer.decode(
             steered_ids[0][prompt_len:], skip_special_tokens=True
         )
 

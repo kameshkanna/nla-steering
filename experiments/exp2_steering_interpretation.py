@@ -149,6 +149,8 @@ def run(args: argparse.Namespace) -> None:
 
     verbalizer = NLAVerbalizer(
         checkpoint_dir=args.av_checkpoint,
+        tokenizer=tokenizer,
+        model=model,
         sglang_url=args.sglang_url,
     )
     nla_layer = verbalizer.meta.layer_idx

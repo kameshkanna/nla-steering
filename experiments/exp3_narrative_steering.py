@@ -119,10 +119,14 @@ def run(args: argparse.Namespace) -> None:
 
     verbalizer = NLAVerbalizer(
         checkpoint_dir=args.av_checkpoint,
+        tokenizer=tokenizer,
+        model=model,
         sglang_url=args.sglang_url,
     )
     steerer = NarrativeSteerer(
         ar_checkpoint_dir=args.ar_checkpoint,
+        tokenizer=tokenizer,
+        model=model,
         sglang_url=args.sglang_url,
     )
     nla_layer = steerer._layer_idx
@@ -146,8 +150,6 @@ def run(args: argparse.Namespace) -> None:
 
         # Narrative steering
         narrative_result = steerer.steered_generate(
-            model=model,
-            tokenizer=tokenizer,
             prompt=exp.prompt,
             target_description=exp.target_description,
             coefficient=args.narrative_coefficient,
