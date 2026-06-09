@@ -43,8 +43,9 @@ echo "==> Installing SGLang 0.5.10 + transformers 5.3.0"
 pip install --quiet "sglang[all]==0.5.10"
 pip install --quiet "transformers==5.3.0" "huggingface_hub>=1.5.0"
 
-echo "==> Installing nla-inference (NLAClient)"
-pip install --quiet git+https://github.com/kitft/nla-inference.git
+echo "==> Downloading nla_inference.py (single-file, no package)"
+curl -fsSL "https://raw.githubusercontent.com/kitft/nla-inference/main/nla_inference.py" \
+    -o nla_inference.py
 
 echo "==> Installing this package in editable mode"
 pip install --quiet -e .
