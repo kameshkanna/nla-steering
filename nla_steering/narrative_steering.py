@@ -65,11 +65,12 @@ class NarrativeSteerer:
         import httpx, orjson, re as _re
 
         prompt_content = self._meta.ar_prompt_template.format(explanation=description)
-        ids: list[int] = self._tokenizer.apply_chat_template(
+        formatted: str = self._tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt_content}],
-            tokenize=True,
+            tokenize=False,
             add_generation_prompt=True,
         )
+        ids: list[int] = self._tokenizer.encode(formatted, add_special_tokens=False)
         embed_module = self._model.get_input_embeddings()
         embed_weight = embed_module.weight.detach().float().cpu()
         ids_tensor = torch.tensor(ids, dtype=torch.long)

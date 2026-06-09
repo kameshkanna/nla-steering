@@ -101,11 +101,15 @@ class NLAVerbalizer:
         prompt_content = self.meta.av_prompt_template.format(
             injection_char=self.meta.injection_char
         )
-        ids: list[int] = self._tokenizer.apply_chat_template(
+        # Use tokenize=False to get the formatted string, then encode manually.
+        # apply_chat_template with tokenize=True returns an Encoding object in
+        # some transformers versions instead of a plain list[int].
+        formatted: str = self._tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt_content}],
-            tokenize=True,
+            tokenize=False,
             add_generation_prompt=True,
         )
+        ids: list[int] = self._tokenizer.encode(formatted, add_special_tokens=False)
 
         # Find injection position (with neighbor validation)
         inject_pos: Optional[int] = None
