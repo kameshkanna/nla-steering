@@ -1,13 +1,16 @@
 #!/bin/bash
 # Launch SGLang server for an NLA AV or AR checkpoint.
-# Usage: ./scripts/launch_sglang.sh <checkpoint_path> [port]
 #
-# On Lambda Labs (H100):
-#   ./scripts/launch_sglang.sh /checkpoints/qwen2.5-7b-av 30000
+# Usage:
+#   ./scripts/launch_sglang.sh <hf-model-id-or-local-path> [port]
+#
+# Examples:
+#   ./scripts/launch_sglang.sh kitft/nla-qwen2.5-7b-L20-av 30000
+#   ./scripts/launch_sglang.sh kitft/nla-qwen2.5-7b-L20-ar 30001
 
 set -euo pipefail
 
-CHECKPOINT=${1:?Usage: $0 <checkpoint_path> [port]}
+CHECKPOINT=${1:?Usage: $0 <hf-model-id-or-local-path> [port]}
 PORT=${2:-30000}
 
 mkdir -p logs
@@ -16,8 +19,7 @@ echo "Launching SGLang server"
 echo "  Checkpoint : $CHECKPOINT"
 echo "  Port       : $PORT"
 
-python -m sglang.launch_server \
-    --model-path "$CHECKPOINT" \
+sglang serve "$CHECKPOINT" \
     --port "$PORT" \
     --dtype bfloat16 \
     --mem-fraction-static 0.85 \

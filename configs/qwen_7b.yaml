@@ -5,12 +5,12 @@ model: Qwen/Qwen2.5-7B-Instruct
 device: cuda
 
 checkpoints:
-  av: /checkpoints/qwen2.5-7b-nla/av   # Activation Verbalizer
-  ar: /checkpoints/qwen2.5-7b-nla/ar   # Activation Reconstructor
+  av: kitft/nla-qwen2.5-7b-L20-av   # Activation Verbalizer (HF Hub)
+  ar: kitft/nla-qwen2.5-7b-L20-ar   # Activation Reconstructor (HF Hub)
 
 sglang:
   av_url: http://localhost:30000
-  ar_url: http://localhost:30001        # Run AR on a separate port
+  ar_url: http://localhost:30001     # Run AR on a separate port
 
 nla:
   layer_idx: 20                         # From nla_meta.yaml — do not change
