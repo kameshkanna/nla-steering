@@ -10,6 +10,8 @@ set -euo pipefail
 CHECKPOINT=${1:?Usage: $0 <checkpoint_path> [port]}
 PORT=${2:-30000}
 
+mkdir -p logs
+
 echo "Launching SGLang server"
 echo "  Checkpoint : $CHECKPOINT"
 echo "  Port       : $PORT"
