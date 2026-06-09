@@ -39,8 +39,11 @@ pip install --quiet repeng
 echo "==> Installing SGLang (pulls transformers==5.6.0)"
 pip install --quiet "sglang[all]>=0.5.6"
 
-echo "==> Fixing kernels bug (upgrade kernels AFTER sglang)"
-pip install --quiet "kernels>=0.16.0"
+echo "==> Patching kernels 0.15.x LayerRepository bug"
+# kernels<=0.15.2 raises ValueError if revision/version not set.
+# Patch: make revision default to 'main' instead of raising.
+LAYER_PY=$(python -c "import kernels.layer.layer as m; print(m.__file__)")
+sed -i 's/raise ValueError("Either a revision or a version must be specified.")/revision = "main"/' "$LAYER_PY"
 
 echo "==> Installing nla-inference (NLAClient)"
 pip install --quiet git+https://github.com/kitft/nla-inference.git
