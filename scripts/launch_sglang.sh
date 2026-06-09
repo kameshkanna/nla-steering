@@ -24,4 +24,5 @@ sglang serve --model-path "$CHECKPOINT" \
     --dtype bfloat16 \
     --mem-fraction-static 0.45 \
     --disable-cuda-graph \
+    --disable-radix-cache \
     2>&1 | tee "logs/sglang_${PORT}.log"
