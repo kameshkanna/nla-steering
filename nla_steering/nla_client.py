@@ -20,17 +20,17 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class NLAMeta:
-    """Parsed nla_meta.yaml sidecar for a checkpoint."""
+    """Parsed nla_meta.yaml sidecar for a checkpoint (schema_version=2)."""
 
-    model_name: str
+    role: str                    # "av" or "ar"
     d_model: int
-    layer_idx: int
-    injection_scale: float
-    embed_scale: Optional[float]
-    template_prompt: str
-    injection_token_id: int
-    left_neighbor_id: int
-    right_neighbor_id: int
+    layer_idx: int               # extracted from extraction_layer_index
+    injection_scale: float       # from extraction.injection_scale
+    injection_token_id: int      # from tokens.injection_token_id
+    left_neighbor_id: int        # from tokens.injection_left_neighbor_id
+    right_neighbor_id: int       # from tokens.injection_right_neighbor_id
+    av_prompt_template: str      # from prompt_templates.av
+    ar_prompt_template: str      # from prompt_templates.ar
 
     @classmethod
     def from_checkpoint(cls, checkpoint_dir: str | Path) -> "NLAMeta":
@@ -39,7 +39,17 @@ class NLAMeta:
             raise FileNotFoundError(f"nla_meta.yaml not found in {checkpoint_dir}")
         with open(path) as f:
             raw = yaml.safe_load(f)
-        return cls(**raw)
+        return cls(
+            role=raw["role"],
+            d_model=raw["d_model"],
+            layer_idx=raw["extraction_layer_index"],
+            injection_scale=raw["extraction"]["injection_scale"],
+            injection_token_id=raw["tokens"]["injection_token_id"],
+            left_neighbor_id=raw["tokens"]["injection_left_neighbor_id"],
+            right_neighbor_id=raw["tokens"]["injection_right_neighbor_id"],
+            av_prompt_template=raw["prompt_templates"]["av"],
+            ar_prompt_template=raw["prompt_templates"]["ar"],
+        )
 
 
 class NLAVerbalizer:
@@ -71,8 +81,8 @@ class NLAVerbalizer:
             device=device,
         )
         logger.info(
-            "NLAVerbalizer ready — model=%s layer=%d d_model=%d",
-            self.meta.model_name,
+            "NLAVerbalizer ready — role=%s layer=%d d_model=%d",
+            self.meta.role,
             self.meta.layer_idx,
             self.meta.d_model,
         )
