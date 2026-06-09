@@ -21,7 +21,6 @@ pip install --upgrade pip --quiet
 echo "==> Installing core dependencies"
 pip install --quiet \
     "torch>=2.3.0" \
-    "transformers==4.49.0" \
     "safetensors>=0.4.0" \
     "numpy>=1.26.0" \
     "httpx>=0.27.0" \
@@ -37,11 +36,11 @@ pip install --quiet \
 echo "==> Installing repeng (steering vectors)"
 pip install --quiet repeng
 
-echo "==> Installing SGLang"
+echo "==> Installing SGLang (pulls transformers==5.6.0)"
 pip install --quiet "sglang[all]>=0.5.6"
 
-echo "==> Pinning transformers to avoid kernels bug"
-pip install --quiet "transformers==4.49.0"
+echo "==> Fixing kernels bug (upgrade kernels AFTER sglang)"
+pip install --quiet "kernels>=0.16.0"
 
 echo "==> Installing nla-inference (NLAClient)"
 pip install --quiet git+https://github.com/kitft/nla-inference.git
