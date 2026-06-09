@@ -36,14 +36,12 @@ pip install --quiet \
 echo "==> Installing repeng (steering vectors)"
 pip install --quiet repeng
 
-echo "==> Installing SGLang (pulls transformers==5.6.0)"
-pip install --quiet "sglang[all]>=0.5.6"
-
-echo "==> Patching kernels 0.15.x LayerRepository bug"
-# kernels<=0.15.2 raises ValueError if revision/version not set.
-# Patch: make revision default to 'main' instead of raising.
-LAYER_PY=$(python -c "import kernels.layer.layer as m; print(m.__file__)")
-sed -i 's/raise ValueError("Either a revision or a version must be specified.")/revision = "main"/' "$LAYER_PY"
+echo "==> Installing SGLang 0.5.10 + transformers 5.3.0"
+# sglang>=0.5.11 pins transformers==5.6.0 which hard-requires kernels<=0.15.2
+# with a broken LayerRepository (ValueError on missing revision).
+# sglang==0.5.10 pulls transformers==5.3.0 where kernels is optional only.
+pip install --quiet "sglang[all]==0.5.10"
+pip install --quiet "transformers==5.3.0" "huggingface_hub>=1.5.0"
 
 echo "==> Installing nla-inference (NLAClient)"
 pip install --quiet git+https://github.com/kitft/nla-inference.git
