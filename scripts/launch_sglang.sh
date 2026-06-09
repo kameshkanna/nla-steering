@@ -19,7 +19,7 @@ echo "Launching SGLang server"
 echo "  Checkpoint : $CHECKPOINT"
 echo "  Port       : $PORT"
 
-sglang serve "$CHECKPOINT" \
+sglang serve --model-path "$CHECKPOINT" \
     --port "$PORT" \
     --dtype bfloat16 \
     --mem-fraction-static 0.85 \
