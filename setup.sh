@@ -2,11 +2,12 @@
 set -euo pipefail
 
 ENV_NAME="nla-steering"
-PYTHON="python3.11"
+PYTHON="python3.10"
 
 echo "==> Checking Python"
 if ! command -v $PYTHON &>/dev/null; then
     echo "ERROR: $PYTHON not found. Install it first."
+    echo "  Lambda Stack 22.04: python3.10 is the default interpreter."
     exit 1
 fi
 $PYTHON --version

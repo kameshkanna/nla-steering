@@ -4,7 +4,8 @@ Steering vector generation (CAA / PCA-diff) and injection utilities.
 Provides:
   - SteeringVector: a layer-indexed mapping of direction vectors
   - generate_caa_vector: build a steering direction from contrast pairs
-  - SteeringHook: inject a vector at a specific layer during a forward pass
+  - steering_hook: inject a vector at all token positions at a specific layer
+  - last_token_steering_hook: inject ONLY at the final (last) token position
   - extract_post_steering_activation: single call that steers + captures AV input
 """
 
@@ -176,6 +177,114 @@ def steering_hook(
         yield
     finally:
         handle.remove()
+
+
+@contextmanager
+def last_token_steering_hook(
+    model: PreTrainedModel,
+    layer_idx: int,
+    direction: torch.Tensor,
+    coefficient: float,
+    attention_mask: Optional[torch.Tensor] = None,
+) -> Generator[None, None, None]:
+    """
+    Context manager that adds `coefficient * direction` ONLY at the last token
+    position of the residual stream output at `layer_idx`.
+
+    During autoregressive generation each forward step processes a single token,
+    so this is equivalent to injecting at every decoding step — but when run on
+    a multi-token prompt prefix it targets only the final real token rather than
+    polluting earlier positions.
+
+    Args:
+        model: HuggingFace causal LM.
+        layer_idx: Which decoder layer to hook (0-indexed).
+        direction: Steering direction, shape (d_model,).
+        coefficient: Scale multiplier.
+        attention_mask: Optional (batch, seq) mask — used to find the real last
+            token for padded batches. If None, assumes the last position is real.
+    """
+    decoder_layers = _get_decoder_layers(model)
+    n_layers = len(decoder_layers)
+    real_idx = layer_idx if layer_idx >= 0 else n_layers + layer_idx
+    delta = direction.clone()
+
+    def _hook(
+        module: nn.Module, inp: tuple, out: tuple | torch.Tensor
+    ) -> tuple | torch.Tensor:
+        hidden = out[0] if isinstance(out, tuple) else out
+        # hidden: (batch, seq, d_model)
+        batch_size, seq_len, _ = hidden.shape
+        d = delta.to(hidden.device, hidden.dtype)
+        if attention_mask is not None and attention_mask.shape[1] == seq_len:
+            lengths = attention_mask.sum(dim=1) - 1  # (batch,)
+            last_positions = lengths.clamp(min=0).long()
+        else:
+            last_positions = torch.full((batch_size,), seq_len - 1, dtype=torch.long, device=hidden.device)
+        patched = hidden.clone()
+        for b in range(batch_size):
+            patched[b, last_positions[b]] = patched[b, last_positions[b]] + coefficient * d
+        if isinstance(out, tuple):
+            return (patched,) + out[1:]
+        return patched
+
+    handle = decoder_layers[real_idx].register_forward_hook(_hook)
+    try:
+        yield
+    finally:
+        handle.remove()
+
+
+def compute_caa_vectors_for_concepts(
+    model: PreTrainedModel,
+    tokenizer: PreTrainedTokenizerBase,
+    concept_pairs: dict[str, list[tuple[str, str]]],
+    layer_indices: list[int],
+    method: str = "mean_diff",
+    batch_size: int = 8,
+    save_dir: Optional[str] = None,
+) -> dict[str, "SteeringVector"]:
+    """
+    Pre-compute CAA steering vectors for multiple concepts in one pass.
+
+    This is the recommended entry point for Exp 2: call this once before the
+    main experiment loop so vectors are ready without re-running CAA per prompt.
+
+    Args:
+        model: Causal LM in eval mode.
+        tokenizer: Matching tokenizer.
+        concept_pairs: {concept_name → list of (positive_text, negative_text)}.
+        layer_indices: Layers to compute directions for.
+        method: "mean_diff" or "pca_diff".
+        batch_size: Forward-pass batch size.
+        save_dir: If set, save each SteeringVector as <save_dir>/<concept>.npz.
+
+    Returns:
+        dict mapping concept name → SteeringVector.
+    """
+    from pathlib import Path
+
+    vectors: dict[str, SteeringVector] = {}
+    for concept, pairs in concept_pairs.items():
+        positives = [p for p, _ in pairs]
+        negatives = [n for _, n in pairs]
+        logger.info("Pre-computing CAA vector: %s (%d pairs)", concept, len(pairs))
+        sv = generate_caa_vector(
+            model=model,
+            tokenizer=tokenizer,
+            positive_texts=positives,
+            negative_texts=negatives,
+            layer_indices=layer_indices,
+            batch_size=batch_size,
+            method=method,
+        )
+        vectors[concept] = sv
+        if save_dir:
+            p = Path(save_dir)
+            p.mkdir(parents=True, exist_ok=True)
+            sv.save(str(p / f"{concept}.npz"))
+            logger.info("Saved %s steering vector to %s/%s.npz", concept, save_dir, concept)
+    return vectors
 
 
 def extract_post_steering_activation(

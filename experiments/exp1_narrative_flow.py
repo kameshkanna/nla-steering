@@ -5,10 +5,14 @@ For a set of prompts, extract residual stream activations at every N layers
 and verbalize them with the NLA AV. Produces a layer-by-layer "computational
 narrative" showing how the model's internal representation evolves.
 
+Also runs a full generate() pass to show the actual model output alongside
+the narrative, so you can see how the internal trace correlates with what
+the model ultimately says.
+
 Usage:
     python experiments/exp1_narrative_flow.py \
         --model Qwen/Qwen2.5-7B-Instruct \
-        --av-checkpoint /path/to/qwen2.5-7b-av \
+        --av-checkpoint kitft/nla-qwen2.5-7b-L20-av \
         --sglang-url http://localhost:30000 \
         --output results/exp1_flow.jsonl
 """
@@ -26,6 +30,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
 
 sys.path.insert(0, str(Path(__file__).parents[1]))
 from nla_steering.activation_extractor import extract_activations
@@ -54,12 +59,29 @@ PROMPTS = [
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Exp 1: Narrative Flow across layers")
     p.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
-    p.add_argument("--av-checkpoint", required=True, help="Path to AV checkpoint dir")
+    p.add_argument("--av-checkpoint", required=True, help="HF model ID or local path to AV checkpoint")
     p.add_argument("--sglang-url", default="http://localhost:30000")
     p.add_argument("--layer-stride", type=int, default=4, help="Sample every N layers")
     p.add_argument("--output", default="results/exp1_flow.jsonl")
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--prompts", nargs="*", help="Override default prompts")
+    p.add_argument(
+        "--max-new-tokens",
+        type=int,
+        default=512,
+        help="Max tokens for the full generation output (traces all the way to final answer)",
+    )
+    p.add_argument(
+        "--verbalize-max-tokens",
+        type=int,
+        default=128,
+        help="Max tokens per NLA verbalization call",
+    )
+    p.add_argument(
+        "--no-generate",
+        action="store_true",
+        help="Skip the generation pass (only show layer narratives)",
+    )
     return p.parse_args()
 
 
@@ -96,6 +118,8 @@ def run(args: argparse.Namespace) -> None:
 
     for prompt in tqdm(prompts, desc="Prompts"):
         enc = tokenizer(prompt, return_tensors="pt").to(args.device)
+
+        # --- Layer-by-layer narrative ---
         activations = extract_activations(
             model,
             enc["input_ids"],
@@ -103,26 +127,59 @@ def run(args: argparse.Namespace) -> None:
             attention_mask=enc.get("attention_mask"),
         )
 
-        narrative: list[dict] = []
-        layer_acts = [activations[l][0] for l in layer_indices]  # list of (d_model,)
-
+        layer_acts = [activations[l][0] for l in layer_indices]
         descriptions = verbalizer.verbalize_batch(
-            torch.stack(layer_acts).cpu().numpy()
+            torch.stack(layer_acts).cpu().numpy(),
+            max_new_tokens=args.verbalize_max_tokens,
         )
+        narrative: list[dict] = [
+            {"layer": l, "description": d}
+            for l, d in zip(layer_indices, descriptions)
+        ]
 
-        for layer_idx, desc in zip(layer_indices, descriptions):
-            narrative.append({"layer": layer_idx, "description": desc})
+        # --- Full generation output ---
+        generated_text: str = ""
+        if not args.no_generate:
+            chat_input = tokenizer.apply_chat_template(
+                [{"role": "user", "content": prompt}],
+                tokenize=True,
+                add_generation_prompt=True,
+                return_tensors="pt",
+            ).to(args.device)
+            with torch.no_grad():
+                out_ids = model.generate(
+                    chat_input,
+                    max_new_tokens=args.max_new_tokens,
+                    do_sample=False,
+                )
+            prompt_len = chat_input.shape[1]
+            generated_text = tokenizer.decode(
+                out_ids[0][prompt_len:], skip_special_tokens=True
+            )
 
-        record = {"prompt": prompt, "narrative": narrative}
+        record = {
+            "prompt": prompt,
+            "narrative": narrative,
+            "generated_text": generated_text,
+        }
         results.append(record)
 
         # Live console display
-        table = Table(title=f"Prompt: {prompt[:60]}")
+        table = Table(title=f"Prompt: {prompt[:60]}", show_lines=True)
         table.add_column("Layer", style="cyan", width=8)
         table.add_column("Internal Description", style="white")
         for entry in narrative:
             table.add_row(str(entry["layer"]), entry["description"])
         console.print(table)
+        if generated_text:
+            console.print(
+                Panel(
+                    generated_text,
+                    title="[bold green]Model Output[/bold green]",
+                    border_style="green",
+                )
+            )
+        console.print()
 
     with open(args.output, "w") as f:
         for r in results:
