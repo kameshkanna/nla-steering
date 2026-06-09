@@ -1,0 +1,33 @@
+# Config for Gemma-3-12B-IT + released NLA checkpoints
+
+model: google/gemma-3-12b-it
+device: cuda
+
+checkpoints:
+  av: kitft/nla-gemma3-12b-L32-av
+  ar: kitft/nla-gemma3-12b-L32-ar
+
+sglang:
+  av_url: http://localhost:30000
+  ar_url: http://localhost:30001
+
+nla:
+  layer_idx: 32
+  d_model: 2560
+
+experiments:
+  exp1:
+    layer_stride: 4
+    output: results/gemma12b_exp1_flow.jsonl
+
+  exp2:
+    steering_concepts: [sycophancy, honesty, refusal, confidence]
+    coefficients: [-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0]
+    caa_method: mean_diff
+    output: results/gemma12b_exp2_steering.jsonl
+
+  exp3:
+    narrative_coefficient: 1.0
+    caa_coefficient: 2.0
+    max_new_tokens: 200
+    output: results/gemma12b_exp3_narrative.jsonl

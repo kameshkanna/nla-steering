@@ -20,33 +20,44 @@ pip install -r requirements.txt
 pip install -e git+https://github.com/kitft/nla-inference.git#egg=nla_inference
 ```
 
-Download NLA checkpoints (Qwen2.5-7B AV + AR) from the Neuronpedia / paper release page.
+## Verified NLA Checkpoint IDs (HuggingFace)
 
-Update `configs/qwen_7b.yaml` with your checkpoint paths.
+| Model | AV | AR |
+|---|---|---|
+| Qwen2.5-7B | `kitft/nla-qwen2.5-7b-L20-av` | `kitft/nla-qwen2.5-7b-L20-ar` |
+| Gemma-3-12B | `kitft/nla-gemma3-12b-L32-av` | `kitft/nla-gemma3-12b-L32-ar` |
+| Gemma-3-27B | `kitft/nla-gemma3-27b-L41-av` | `kitft/nla-gemma3-27b-L41-ar` |
+| Llama-3.3-70B | `kitft/Llama-3.3-70B-NLA-L53-av` | `kitft/Llama-3.3-70B-NLA-L53-ar` |
 
-## Running
+## Running (Qwen2.5-7B, single H100)
 
 ```bash
-# Terminal 1: Launch AV SGLang server
-./scripts/launch_sglang.sh /checkpoints/qwen2.5-7b-nla/av 30000
+# Download AV checkpoint locally (needed for nla_meta.yaml sidecar)
+hf download kitft/nla-qwen2.5-7b-L20-av --local-dir checkpoints/av
 
-# Terminal 2: Launch AR SGLang server (Exp 3 only)
-./scripts/launch_sglang.sh /checkpoints/qwen2.5-7b-nla/ar 30001
+# Terminal 1: Launch AV SGLang server (streams from HF on first run)
+./scripts/launch_sglang.sh kitft/nla-qwen2.5-7b-L20-av 30000
 
-# Exp 1
+# Terminal 2 (once server shows "Server is ready"):
+
+# Exp 1 — Narrative Flow
 python experiments/exp1_narrative_flow.py \
     --model Qwen/Qwen2.5-7B-Instruct \
-    --av-checkpoint /checkpoints/qwen2.5-7b-nla/av
+    --av-checkpoint checkpoints/av \
+    --sglang-url http://localhost:30000
 
-# Exp 2
+# Exp 2 — Steering Interpretation
 python experiments/exp2_steering_interpretation.py \
     --model Qwen/Qwen2.5-7B-Instruct \
-    --av-checkpoint /checkpoints/qwen2.5-7b-nla/av \
+    --av-checkpoint checkpoints/av \
     --steering-concept sycophancy
 
-# Exp 3
+# Exp 3 — Narrative Steering (needs AR server on port 30001 too)
+hf download kitft/nla-qwen2.5-7b-L20-ar --local-dir checkpoints/ar
+./scripts/launch_sglang.sh kitft/nla-qwen2.5-7b-L20-ar 30001  # Terminal 3
+
 python experiments/exp3_narrative_steering.py \
     --model Qwen/Qwen2.5-7B-Instruct \
-    --av-checkpoint /checkpoints/qwen2.5-7b-nla/av \
-    --ar-checkpoint /checkpoints/qwen2.5-7b-nla/ar
+    --av-checkpoint checkpoints/av \
+    --ar-checkpoint checkpoints/ar
 ```
