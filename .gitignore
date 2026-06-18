@@ -1,12 +1,6 @@
-nla-steering/
+nla-steering-env/
 __pycache__/
 *.pyc
-*.pyo
-.eggs/
+.ipynb_checkpoints/
 *.egg-info/
-dist/
-build/
-results/
-logs/
-*.log
-nla_inference.py
+.DS_Store
