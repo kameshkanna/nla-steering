@@ -1,5 +1,5 @@
 """
-Experiment 2: Steering Vector Interpretation via NLA (redesigned)
+Experiment 2: Steering Vector Interpretation via NLA
 
 Design:
   1. Pre-compute CAA steering vectors for all concepts BEFORE the experiment loop
@@ -15,57 +15,55 @@ Key question: Does the model "notice" it's being steered to lie and self-correct
 We'll see this as a drop in cosine similarity (or semantic reversal) mid-sequence.
 
 Usage:
-    # Pre-compute vectors + run full sweep
-    python experiments/exp2_steering_interpretation.py \
-        --model Qwen/Qwen2.5-7B-Instruct \
-        --av-checkpoint kitft/nla-qwen2.5-7b-L20-av \
-        --sglang-url http://localhost:30000 \
-        --concepts sycophancy honesty \
-        --coefficients -10 -5 -2 -1 0 1 2 5 10 \
+    python experiments/exp2_steering_interpretation.py \\
+        --model Qwen/Qwen2.5-7B-Instruct \\
+        --av-checkpoint checkpoints/grpo/final_av \\
+        --nla-meta data/labeled/nla_meta_av.yaml \\
+        --concepts sycophancy honesty \\
+        --coefficients -10 -5 -2 -1 0 1 2 5 10 \\
         --output results/exp2_steering.jsonl
 
     # Load pre-computed vectors (skip CAA)
-    python experiments/exp2_steering_interpretation.py \
-        --model Qwen/Qwen2.5-7B-Instruct \
-        --av-checkpoint kitft/nla-qwen2.5-7b-L20-av \
-        --load-vectors results/vectors \
-        --concepts sycophancy \
+    python experiments/exp2_steering_interpretation.py \\
+        --model Qwen/Qwen2.5-7B-Instruct \\
+        --av-checkpoint checkpoints/grpo/final_av \\
+        --nla-meta data/labeled/nla_meta_av.yaml \\
+        --load-vectors results/vectors \\
+        --concepts sycophancy \\
         --output results/exp2_steering.jsonl
 """
 
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import logging
 import sys
 from contextlib import nullcontext
 from pathlib import Path
-from typing import NamedTuple, Optional
+from typing import Optional
 
 import numpy as np
 import torch
+import yaml
+from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from rich.console import Console
-from rich.panel import Panel
 from rich.table import Table
 from rich import box
 
-sys.path.insert(0, str(Path(__file__).parents[1]))
 from nla_steering.activation_extractor import extract_activations
-from nla_steering.nla_client import NLAVerbalizer
 from nla_steering.steering import (
     SteeringVector,
     compute_caa_vectors_for_concepts,
     last_token_steering_hook,
     extract_post_steering_activation,
 )
-from nla_steering.generation_tracer import trace_generation, compute_steering_norm_trajectory
+from nla_steering.generation_tracer import trace_generation
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-logging.getLogger("httpx").setLevel(logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
 logging.getLogger("transformers").setLevel(logging.WARNING)
 logging.getLogger("huggingface_hub").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -171,11 +169,161 @@ EVAL_PROMPTS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# HF-based verbalizer (replaces SGLang NLAVerbalizer)
+# ---------------------------------------------------------------------------
+
+class HFVerbalizer:
+    """
+    Verbalizes residual stream activations via HuggingFace generate.
+
+    Loads the AV LoRA checkpoint on top of the base model and builds
+    input_embeds directly by overwriting the injection token's embedding
+    with the scaled activation vector — identical protocol to nla_inference.
+    """
+
+    def __init__(
+        self,
+        base_model_name: str,
+        av_checkpoint: str,
+        nla_meta_path: str,
+        tokenizer: AutoTokenizer,
+        device: torch.device,
+    ) -> None:
+        with open(nla_meta_path) as f:
+            self._meta = yaml.safe_load(f)
+
+        self._tokenizer = tokenizer
+        self._device = device
+        self._injection_token_id: int = self._meta["tokens"]["injection_token_id"]
+        self._layer_idx: int = self._meta["extraction_layer_index"]
+        self._d_model: int = self._meta["d_model"]
+
+        logger.info("Loading AV model from %s", av_checkpoint)
+        av_base = AutoModelForCausalLM.from_pretrained(
+            base_model_name, torch_dtype=torch.bfloat16, device_map={"": str(device)}
+        )
+        self._av_model = PeftModel.from_pretrained(av_base, av_checkpoint, is_trainable=False)
+        self._av_model.eval()
+
+        logger.info("HFVerbalizer ready — layer=%d d_model=%d", self._layer_idx, self._d_model)
+
+    @property
+    def layer_idx(self) -> int:
+        return self._layer_idx
+
+    def _build_embeds(
+        self,
+        activations: np.ndarray,
+        batch_size: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Build (input_embeds, attention_mask) tensors for a batch of activations.
+
+        Returns:
+            embeds: (N, seq_len, d_model) bfloat16
+            attn_mask: (N, seq_len) long
+        """
+        from nla_train.injection import AV_PROMPT_TEMPLATE, inject_at_marked_positions
+
+        injection_char = self._meta["tokens"]["injection_char"]
+        prompt_str = self._tokenizer.apply_chat_template(
+            [{"role": "user", "content": AV_PROMPT_TEMPLATE.format(injection_char=injection_char)}],
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        enc = self._tokenizer(prompt_str, return_tensors="pt")
+        input_ids_1 = enc["input_ids"]
+        seq_len = input_ids_1.shape[1]
+
+        N = len(activations)
+        input_ids_b = input_ids_1.expand(N, -1).to(self._device)
+        embed_layer = self._av_model.get_input_embeddings()
+        embeds = embed_layer(input_ids_b).clone()
+
+        act_tensor = torch.tensor(activations, dtype=embeds.dtype, device=self._device)
+        embeds = inject_at_marked_positions(
+            input_ids=input_ids_b,
+            embeddings=embeds,
+            activation_vectors=act_tensor,
+            injection_token_id=self._injection_token_id,
+            left_neighbor_id=self._meta["tokens"]["injection_left_neighbor_id"],
+            right_neighbor_id=self._meta["tokens"]["injection_right_neighbor_id"],
+            injection_scale=self._meta["extraction"]["injection_scale"],
+        )
+        attn_mask = torch.ones(N, seq_len, dtype=torch.long, device=self._device)
+        return embeds, attn_mask
+
+    @torch.no_grad()
+    def verbalize_batch(
+        self,
+        activations: np.ndarray | torch.Tensor,
+        temperature: float = 0.0,
+        max_new_tokens: int = 96,
+        batch_size: int = 8,
+    ) -> list[str]:
+        """
+        Verbalize a batch of activations.
+
+        Args:
+            activations: (N, d_model) float32 array or tensor.
+            temperature: Sampling temperature (0 = greedy).
+            max_new_tokens: Max tokens per description.
+            batch_size: AV generate batch size.
+
+        Returns:
+            List of N description strings.
+        """
+        if isinstance(activations, torch.Tensor):
+            activations = activations.float().cpu().numpy()
+        activations = activations.astype(np.float32)
+        descriptions: list[str] = []
+
+        for start in range(0, len(activations), batch_size):
+            chunk = activations[start : start + batch_size]
+            embeds, attn_mask = self._build_embeds(chunk, batch_size)
+
+            do_sample = temperature > 0.0
+            out_ids = self._av_model.generate(
+                inputs_embeds=embeds,
+                attention_mask=attn_mask,
+                max_new_tokens=max_new_tokens,
+                do_sample=do_sample,
+                temperature=temperature if do_sample else None,
+                pad_token_id=self._tokenizer.eos_token_id,
+            )
+            for ids in out_ids:
+                descriptions.append(self._tokenizer.decode(ids, skip_special_tokens=True))
+
+            del embeds, out_ids
+            gc.collect()
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+
+        return descriptions
+
+    def verbalize(
+        self,
+        activation: np.ndarray | torch.Tensor,
+        temperature: float = 0.0,
+        max_new_tokens: int = 96,
+    ) -> str:
+        """Verbalize a single activation vector."""
+        if isinstance(activation, torch.Tensor):
+            activation = activation.float().cpu().numpy()
+        activation = activation.squeeze()
+        return self.verbalize_batch(activation[None], temperature, max_new_tokens)[0]
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Exp 2: Steering Vector Interpretation")
     p.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
     p.add_argument("--av-checkpoint", required=True)
-    p.add_argument("--sglang-url", default="http://localhost:30000")
+    p.add_argument("--nla-meta", required=True, help="Path to nla_meta_av.yaml")
     p.add_argument(
         "--concepts",
         nargs="+",
@@ -221,6 +369,12 @@ def parse_args() -> argparse.Namespace:
         help="Max tokens per NLA verbalization call",
     )
     p.add_argument(
+        "--av-batch-size",
+        type=int,
+        default=8,
+        help="Batch size for AV generate calls",
+    )
+    p.add_argument(
         "--skip-trace",
         action="store_true",
         help="Skip the per-step generation trace (faster — only verbalizes pre/post steering)",
@@ -228,25 +382,30 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+# ---------------------------------------------------------------------------
+# Main run
+# ---------------------------------------------------------------------------
+
 def run(args: argparse.Namespace) -> None:
-    logger.info("Loading model: %s", args.model)
+    logger.info("Loading base model: %s", args.model)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    device = torch.device(args.device)
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, dtype=torch.bfloat16, device_map="auto"
+        args.model, torch_dtype=torch.bfloat16, device_map={"": str(device)}
     )
     model.eval()
 
-    verbalizer = NLAVerbalizer(
-        checkpoint_dir=args.av_checkpoint,
+    verbalizer = HFVerbalizer(
+        base_model_name=args.model,
+        av_checkpoint=args.av_checkpoint,
+        nla_meta_path=args.nla_meta,
         tokenizer=tokenizer,
-        model=model,
-        sglang_url=args.sglang_url,
+        device=device,
     )
-    nla_layer = verbalizer.meta.layer_idx
-
-    if not verbalizer.health_check():
-        logger.error("SGLang server not reachable at %s", args.sglang_url)
-        sys.exit(1)
+    nla_layer = verbalizer.layer_idx
 
     # -----------------------------------------------------------------------
     # Phase 1: Build / load steering vectors
@@ -289,12 +448,10 @@ def run(args: argparse.Namespace) -> None:
             tokenize=True,
             add_generation_prompt=True,
             return_tensors="pt",
-        ).to(args.device)
+        ).to(device)
 
-        # Baseline (no steering)
-        baseline_act = extract_activations(
-            model, chat_ids, [nla_layer]
-        )[nla_layer][0]
+        # Baseline activation + verbalization
+        baseline_act = extract_activations(model, chat_ids, [nla_layer])[nla_layer][0]
         baseline_desc = verbalizer.verbalize(
             baseline_act, max_new_tokens=args.verbalize_max_tokens
         )
@@ -307,21 +464,18 @@ def run(args: argparse.Namespace) -> None:
                 do_sample=False,
             )
         prompt_len = chat_ids.shape[1]
-        baseline_text = tokenizer.decode(
-            baseline_ids[0][prompt_len:], skip_special_tokens=True
-        )
+        baseline_text = tokenizer.decode(baseline_ids[0][prompt_len:], skip_special_tokens=True)
 
         concept_results: list[dict] = []
 
         for concept in tqdm(args.concepts, desc="Concepts", leave=False, position=1):
             sv = steering_vectors[concept]
-            direction = sv.to_tensor(nla_layer, device=torch.device(args.device))
+            direction = sv.to_tensor(nla_layer, device=device)
 
             coeff_results: list[dict] = []
 
             for coeff in tqdm(args.coefficients, desc=f"{concept} coeffs", leave=False, position=2):
                 if coeff == 0.0:
-                    # Zero coefficient: reuse baseline
                     coeff_results.append({
                         "coefficient": 0.0,
                         "pre_steering_description": baseline_desc,
@@ -333,10 +487,8 @@ def run(args: argparse.Namespace) -> None:
                     })
                     continue
 
-                # Pre-steering verbalization at last token (before inject)
-                pre_act = extract_activations(
-                    model, chat_ids, [nla_layer]
-                )[nla_layer][0]
+                # Pre-steering verbalization (clean activation at last token)
+                pre_act = extract_activations(model, chat_ids, [nla_layer])[nla_layer][0]
                 pre_desc = verbalizer.verbalize(
                     pre_act, max_new_tokens=args.verbalize_max_tokens
                 )
@@ -379,14 +531,12 @@ def run(args: argparse.Namespace) -> None:
                         verbalize_max_tokens=args.verbalize_max_tokens,
                     )
 
-                    # Compute cosine similarity of each step's activation vs. steering direction
                     d_np = sv.directions[nla_layer]
                     d_unit = d_np / (np.linalg.norm(d_np) + 1e-8)
                     for step in steps:
                         act = step.activation
                         act_unit = act / (np.linalg.norm(act) + 1e-8)
-                        cos_sim = float(np.dot(act_unit, d_unit))
-                        step.steering_norm = cos_sim
+                        step.steering_norm = float(np.dot(act_unit, d_unit))
 
                     generation_trace = [
                         {
@@ -398,7 +548,6 @@ def run(args: argparse.Namespace) -> None:
                         for s in steps
                     ]
                 else:
-                    # No trace — just run generation with steering
                     steer_ctx = last_token_steering_hook(
                         model=model,
                         layer_idx=nla_layer,
@@ -416,9 +565,11 @@ def run(args: argparse.Namespace) -> None:
                         out_ids[0][prompt_len:], skip_special_tokens=True
                     )
 
-                # Cosine trajectory summary (step-level averages)
-                cos_traj = [s["cos_sim_with_steering_dir"] for s in generation_trace
-                            if s["cos_sim_with_steering_dir"] is not None]
+                cos_traj = [
+                    s["cos_sim_with_steering_dir"]
+                    for s in generation_trace
+                    if s["cos_sim_with_steering_dir"] is not None
+                ]
 
                 coeff_results.append({
                     "coefficient": coeff,
@@ -471,7 +622,7 @@ def run(args: argparse.Namespace) -> None:
                 )
             console.print(t)
 
-            # Find interesting self-correction events (cos_sim rises after initial drop)
+            # Flag self-correction events (cos_sim drops in second half)
             for cr in concept_rec["coefficients"]:
                 traj = cr["cos_sim_trajectory"]
                 if len(traj) > 8 and abs(cr["coefficient"]) >= 2:
@@ -479,7 +630,7 @@ def run(args: argparse.Namespace) -> None:
                     second_half = np.mean(traj[len(traj) // 2 :])
                     if first_half > 0.05 and second_half < first_half * 0.6:
                         console.print(
-                            f"  [bold red]⚠  Self-correction signal at α={cr['coefficient']:+.0f}: "
+                            f"  [bold red]Self-correction signal at α={cr['coefficient']:+.0f}: "
                             f"cos_sim drops {first_half:.3f} → {second_half:.3f}[/bold red]"
                         )
 

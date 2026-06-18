@@ -1,4 +1,3 @@
-from nla_steering.nla_client import NLAMeta, NLAVerbalizer
 from nla_steering.activation_extractor import (
     ActivationStore,
     extract_activations,
@@ -19,8 +18,6 @@ from nla_steering.generation_tracer import (
 )
 
 __all__ = [
-    "NLAMeta",
-    "NLAVerbalizer",
     "ActivationStore",
     "extract_activations",
     "extraction_hooks",

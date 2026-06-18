@@ -116,7 +116,7 @@ def trace_generation(
         tokenizer: Matching tokenizer.
         input_ids: Prompt token ids, shape (1, prompt_len).
         capture_layer: Layer to read activations from.
-        verbalizer: NLAVerbalizer instance — called after generation to label steps.
+        verbalizer: Verbalizer instance with verbalize_batch() — called after generation to label steps.
         attention_mask: Optional attention mask.
         max_new_tokens: Max tokens to generate.
         temperature: Sampling temperature.
