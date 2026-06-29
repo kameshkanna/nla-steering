@@ -168,8 +168,9 @@ class ConditionedHFVerbalizer:
         logger.info("Loading AV model from %s", av_checkpoint)
         av_base = AutoModelForCausalLM.from_pretrained(
             base_model_name,
-            torch_dtype=torch.bfloat16,
+            dtype=torch.bfloat16,
             device_map={"": str(device)},
+            attn_implementation="eager",
         )
         self._av_model = PeftModel.from_pretrained(av_base, av_checkpoint, is_trainable=False)
         self._av_model.eval()
@@ -783,8 +784,9 @@ def run(args: argparse.Namespace) -> None:
     device = torch.device(args.device)
     model = AutoModelForCausalLM.from_pretrained(
         args.model,
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
         device_map={"": str(device)},
+        attn_implementation="eager",
     )
     model.eval()
 
