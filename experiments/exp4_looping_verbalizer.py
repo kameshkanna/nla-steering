@@ -360,7 +360,10 @@ def run_cross_layer_looping(
             tokenize=True,
             add_generation_prompt=True,
             return_tensors="pt",
-        ).to(device)
+        )
+        if hasattr(chat_ids, "input_ids"):
+            chat_ids = chat_ids.input_ids
+        chat_ids = chat_ids.to(device)
         attn_mask = torch.ones_like(chat_ids)
 
         # Single forward pass captures all three layers
@@ -603,7 +606,10 @@ def run_last_token_ablation(
             tokenize=True,
             add_generation_prompt=True,
             return_tensors="pt",
-        ).to(device)
+        )
+        if hasattr(chat_ids, "input_ids"):
+            chat_ids = chat_ids.input_ids
+        chat_ids = chat_ids.to(device)
         attn_mask = torch.ones_like(chat_ids)
 
         # Extract last-token activation at the target layer and sweep layers
