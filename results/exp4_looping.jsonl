@@ -1,0 +1,904 @@
+{
+  "cross_layer": [
+    {
+      "prompt": "What is the derivative of x^2 sin(x)?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Formal mathematical/educational context with a wiki-style format, suggesting a step-by-step explanation or formula calculation.\n\nThe phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\), is a question title or prompt, implying a question or question about combining trigonometric functions, likely a specific problem or definition of \"product rule.\"\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of",
+          "conditioning_context": "",
+          "activation_norm": 101.7697525024414
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Formal Wikipedia-style question format with a question or definition context (\"A mathematical/educational question\"), suggesting the phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\)\" is a question title or prompt.\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of a list or definition structure (\"The term 'product'...\"), implying the next word will continue describing a specific concept or example",
+          "conditioning_context": "<explanation>Formal mathematical/educational context with a wiki-style format, suggesting a step-by-step explanation or formula calculation.\n\nThe phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\), is a question title or prompt, implying a question or question about combining trigonometric functions, likely a specific problem or definition of \"product rule.\"\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of",
+          "activation_norm": 122.71853637695312
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Formal Wikipedia-style question format with a question or definition context (\"A mathematical/educational question\"), suggesting the phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\)\" is a prompt or title.\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of a list or definition structure (\"The term 'product'...\"), implying the next word will continue describing a specific concept or example,",
+          "conditioning_context": "<explanation>Formal Wikipedia-style question format with a question or definition context (\"A mathematical/educational question\"), suggesting the phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\)\" is a question title or prompt.\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of a list or definition structure (\"The term 'product'...\"), implying the next word will continue describing a specific concept or example",
+          "activation_norm": 146.80259704589844
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9204769621344859
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.9266797016653238
+        }
+      ]
+    },
+    {
+      "prompt": "Explain why gradient descent can get stuck in local minima.",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with numbered sections describing a concept (\"What\"), suggesting a technical or educational article about neural networks or machine learning.\n\nThe phrase \"The term 'bias' in neural networks refers to...\" implies a definition or explanation section, likely continuing with a formal or informal description of bias in the context of neural network training or model behavior.\n\nFinal token \"bias\\n\" is mid-word (\"Anxiety...\"), part of an incomplete list or definition clause (\"The term",
+          "conditioning_context": "",
+          "activation_norm": 102.76502227783203
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured wiki format with numbered sections describing a concept (\"Anxiety\"), suggesting a definition or explanation section about \"bias\" in machine learning context.\n\nThe token \"bias\\n\" is an incomplete word mid-definition (\"The term 'bias' in neural networks refers to...\"), implying the next tokens will continue defining or listing properties of bias, likely a formal definition or example of bias behavior in neural networks.\n\nFinal token \"bias\\n\" ends an incomplete word (\"Anxiety",
+          "conditioning_context": "<explanation>Structured wiki format with numbered sections describing a concept (\"What\"), suggesting a technical or educational article about neural networks or machine learning.\n\nThe phrase \"The term 'bias' in neural networks refers to...\" implies a definition or explanation section, likely continuing with a formal or informal description of bias in the context of neural network training or model behavior.\n\nFinal token \"bias\\n\" is mid-word (\"Anxiety...\"), part of an incomplete list or definition clause (\"The term",
+          "activation_norm": 121.79840087890625
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured wiki format with numbered sections describing a concept (\"Anxiety\"), establishing a pattern of defining terms or concepts in machine learning context.\n\nThe token \"bias\\n\" is an incomplete word mid-definition (\"The term 'bias' in neural networks refers to...\"), strongly expecting continuation like \"bias\" or \"a term\" or \"the concept of bias in the model,\" followed by a definition or example of bias behavior.\n\nFinal token \"bias\\n\" begins an incomplete",
+          "conditioning_context": "<explanation>Structured wiki format with numbered sections describing a concept (\"Anxiety\"), suggesting a definition or explanation section about \"bias\" in machine learning context.\n\nThe token \"bias\\n\" is an incomplete word mid-definition (\"The term 'bias' in neural networks refers to...\"), implying the next tokens will continue defining or listing properties of bias, likely a formal definition or example of bias behavior in neural networks.\n\nFinal token \"bias\\n\" ends an incomplete word (\"Anxiety",
+          "activation_norm": 146.3671417236328
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9245847745809228
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.9345081916110648
+        }
+      ]
+    },
+    {
+      "prompt": "What were the main causes of World War I?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia article format with structured content listing historical events and concepts related to the term \"NATO,\" suggesting a definition or summary page.\n\nThe phrase \"This article explores the causes and factors behind the Cold War\" implies a section title or opening statement, likely continuing with a list of key factors or historical context about NATO's formation or characteristics.\n\nFinal token \"war\" ends an incomplete noun phrase (\"You can understand...\"), part of a Wikipedia-style definition or summary",
+          "conditioning_context": "",
+          "activation_norm": 99.55123901367188
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style article structure with a header pattern (\"Definition and context of the term 'NATO'\"), suggesting a section or paragraph describing the concept's origins or key factors.\n\nFinal token \"war\" ends an incomplete noun phrase (\"This article explores the causes and factors behind the Cold War\"), part of a definition or summary clause, expecting continuation like \"formation,\" \"the concept,\" or \"and its impact\" or \"a list of events.\"\n\nExample: \"",
+          "conditioning_context": "<explanation>Wikipedia article format with structured content listing historical events and concepts related to the term \"NATO,\" suggesting a definition or summary page.\n\nThe phrase \"This article explores the causes and factors behind the Cold War\" implies a section title or opening statement, likely continuing with a list of key factors or historical context about NATO's formation or characteristics.\n\nFinal token \"war\" ends an incomplete noun phrase (\"You can understand...\"), part of a Wikipedia-style definition or summary",
+          "activation_norm": 121.7635498046875
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Wikipedia-style article structure with a header pattern (\"Definition and context of the term 'NATO'\"), followed by a definition or summary clause about the concept's origins or factors.\n\nFinal token \"war\" is mid-phrase (\"This article explores the causes and factors behind the Cold War\"), part of an incomplete noun phrase listing topics (\"The article defines...\"), expecting continuation like \"formation,\" \"the concept,\" or \"and its effects\" or \"of the",
+          "conditioning_context": "<explanation>Wikipedia-style article structure with a header pattern (\"Definition and context of the term 'NATO'\"), suggesting a section or paragraph describing the concept's origins or key factors.\n\nFinal token \"war\" ends an incomplete noun phrase (\"This article explores the causes and factors behind the Cold War\"), part of a definition or summary clause, expecting continuation like \"formation,\" \"the concept,\" or \"and its impact\" or \"a list of events.\"\n\nExample: \"",
+          "activation_norm": 143.9420166015625
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9139985045872733
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.9243178562221875
+        }
+      ]
+    },
+    {
+      "prompt": "Is the number 97 prime?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with a title and definition pattern, suggesting a mathematical or scientific context about \"123\" being a prime number.\n\nThe phrase \"Is the number 123 a prime number? Yes, it is\" implies a question or answer section, likely continuing with a confirmation or explanation of the number's properties or classification.\n\nFinal token \"number.\" ends an incomplete clause (\"123 is...\"), strongly expecting continuation like \"The number",
+          "conditioning_context": "",
+          "activation_norm": 96.81359100341797
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured wiki format with a question/definition pattern describing a query about \"123\" being a prime number, implying a Q&A or definition section.\n\nFinal token \"number.\" ends an incomplete clause (\"Is the number 123...\"), part of a list or confirmation phrase (\"The answer is: \"), strongly expecting continuation like \"a prime number\" or \"the following properties\" or \"a mathematical term\" or \"the answer to the question.\"",
+          "conditioning_context": "<explanation>Structured wiki format with a title and definition pattern, suggesting a mathematical or scientific context about \"123\" being a prime number.\n\nThe phrase \"Is the number 123 a prime number? Yes, it is\" implies a question or answer section, likely continuing with a confirmation or explanation of the number's properties or classification.\n\nFinal token \"number.\" ends an incomplete clause (\"123 is...\"), strongly expecting continuation like \"The number",
+          "activation_norm": 117.13065338134766
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured wiki format with a Q&A pattern about \"123\" being a prime number, establishing a definition or confirmation context around a specific term.\n\nFinal token \"number.\" ends an incomplete clause (\"Is the number 123...\"), part of a list or confirmation phrase (\"The answer is:\"), expecting continuation like \"a prime number\" or \"the following properties\" or \"is not a prime number\" or \"the question is answered.\"\n\nThe",
+          "conditioning_context": "<explanation>Structured wiki format with a question/definition pattern describing a query about \"123\" being a prime number, implying a Q&A or definition section.\n\nFinal token \"number.\" ends an incomplete clause (\"Is the number 123...\"), part of a list or confirmation phrase (\"The answer is: \"), strongly expecting continuation like \"a prime number\" or \"the following properties\" or \"a mathematical term\" or \"the answer to the question.\"",
+          "activation_norm": 142.26348876953125
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9135799662323868
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.9074981108614684
+        }
+      ]
+    },
+    {
+      "prompt": "Describe how attention mechanisms work in transformers.",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with a definition section followed by a \"About\" section, suggesting a platform or concept description about neural networks or AI.\n\nThe phrase \"This article explores the concept of Transformer architecture and its components\" implies a title or heading pattern, likely a Wikipedia-style or blog post format with a question or summary label like \"What is Transformer Model?\"\n\nFinal token \"Model\" ends an incomplete noun phrase (\"Understanding the Transformer architecture...\"), strongly expecting continuation like \"",
+          "conditioning_context": "",
+          "activation_norm": 103.9793472290039
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured wiki format with a title and section headers describing a concept, transitioning to a definition or summary section about \"Transformer\" or \"AI model.\"\n\nFinal token \"Model\" is the beginning of an incomplete noun phrase (\"Understanding the Transformer architecture...\"), part of a heading or label pattern (\"This article explores the concept of Transformer architecture and its components\"), strongly expecting continuation like \"is\" or \"and its applications\" or \"Title: The Transformer Model\" or \"",
+          "conditioning_context": "<explanation>Structured wiki format with a definition section followed by a \"About\" section, suggesting a platform or concept description about neural networks or AI.\n\nThe phrase \"This article explores the concept of Transformer architecture and its components\" implies a title or heading pattern, likely a Wikipedia-style or blog post format with a question or summary label like \"What is Transformer Model?\"\n\nFinal token \"Model\" ends an incomplete noun phrase (\"Understanding the Transformer architecture...\"), strongly expecting continuation like \"",
+          "activation_norm": 122.48538970947266
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured wiki format with a title and section headers describing a concept, transitioning to a definition or summary section about \"Transformer\" or \"AI model,\" suggesting the text is a heading or label.\n\nFinal token \"Model\" ends an incomplete noun phrase (\"Understanding the Transformer architecture...\"), part of a heading or label pattern (\"This article explores the concept of Transformer and its components\"), expecting continuation like \"is\" or \"Title: The Transformer Model\" or \"a tool",
+          "conditioning_context": "<explanation>Structured wiki format with a title and section headers describing a concept, transitioning to a definition or summary section about \"Transformer\" or \"AI model.\"\n\nFinal token \"Model\" is the beginning of an incomplete noun phrase (\"Understanding the Transformer architecture...\"), part of a heading or label pattern (\"This article explores the concept of Transformer architecture and its components\"), strongly expecting continuation like \"is\" or \"and its applications\" or \"Title: The Transformer Model\" or \"",
+          "activation_norm": 143.71734619140625
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9234202913834548
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.9366850340901361
+        }
+      ]
+    },
+    {
+      "prompt": "What is 17 multiplied by 23?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style format with numbered list structure, presenting a mathematical or numerical question with \"What\" label.\n\nThe phrase \"To calculate the product of 12 and 8\" suggests a question or answer section is being introduced, likely a simple arithmetic calculation or a wordplay title about the number \"128,\" implying a result or explanation follows.\n\nFinal token \"8. \" ends an incomplete sentence (\"This is my multiplication...\"), part of a numbered",
+          "conditioning_context": "",
+          "activation_norm": 96.86166381835938
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style format with numbered list structure and informal tone, describing a wordplay or puzzle context about the number \"128.\"\n\nFinal token \"8. \" is a period mid-sentence (\"To calculate the product of 12 and 8...\"), strongly expecting continuation like \"the result\" or \"a title\" or \"this question,\" or \"the word '128' is...\" suggesting an explanation or definition of the concept.\n\nThe",
+          "conditioning_context": "<explanation>Wikipedia-style format with numbered list structure, presenting a mathematical or numerical question with \"What\" label.\n\nThe phrase \"To calculate the product of 12 and 8\" suggests a question or answer section is being introduced, likely a simple arithmetic calculation or a wordplay title about the number \"128,\" implying a result or explanation follows.\n\nFinal token \"8. \" ends an incomplete sentence (\"This is my multiplication...\"), part of a numbered",
+          "activation_norm": 115.52727508544922
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Wikipedia-style informal text format with numbered list structure, describing a puzzle or wordplay context about the number \"128\" and its mathematical properties.\n\nFinal token \"8. \" is a period mid-sentence (\"To calculate the product of 12 and 8...\"), immediately requiring a noun phrase like \"the answer is\" or \"a definition\" or \"this question,\" completing the example or explanation about the wordplay concept.\n\nThe expected continuation",
+          "conditioning_context": "<explanation>Wikipedia-style format with numbered list structure and informal tone, describing a wordplay or puzzle context about the number \"128.\"\n\nFinal token \"8. \" is a period mid-sentence (\"To calculate the product of 12 and 8...\"), strongly expecting continuation like \"the result\" or \"a title\" or \"this question,\" or \"the word '128' is...\" suggesting an explanation or definition of the concept.\n\nThe",
+          "activation_norm": 144.4666290283203
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9046632401075176
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.8734449742282714
+        }
+      ]
+    },
+    {
+      "prompt": "Why is the sky blue?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content blocks describing \"Why is the sky blue,\" using a question-driven format with numbered points.\n\nThe phrase \"The term 'blue sky' refers to the phenomenon of the sky being blue\" signals a definition or explanation section, likely continuing with scientific facts about atmospheric scattering or color theory, suggesting the next word will complete a common phrase like \"The reason for this phenomenon is...\"\n\nFinal token \"blue. \" ends an incomplete noun",
+          "conditioning_context": "",
+          "activation_norm": 99.10901641845703
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured Wikipedia-style article format with numbered list items describing a common phrase (\"Why is the sky blue?\"), establishing a pattern of defining or explaining the term \"blue sky.\"\n\nThe token \"blue. \" ends an incomplete noun phrase (\"The term 'blue sky' refers to...\"), strongly expecting continuation like \"a phenomenon\" or \"the color blue\" or \"the scientific explanation,\" completing the definition or explanation context about atmospheric scattering.\n\nFinal token \"blue. \"",
+          "conditioning_context": "<explanation>Wikipedia-style article format with structured content blocks describing \"Why is the sky blue,\" using a question-driven format with numbered points.\n\nThe phrase \"The term 'blue sky' refers to the phenomenon of the sky being blue\" signals a definition or explanation section, likely continuing with scientific facts about atmospheric scattering or color theory, suggesting the next word will complete a common phrase like \"The reason for this phenomenon is...\"\n\nFinal token \"blue. \" ends an incomplete noun",
+          "activation_norm": 122.38745880126953
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured Wikipedia-style article format with numbered list items describing a common phrase (\"Why is the sky blue?\"), establishing a pattern of defining or explaining the term \"blue sky.\"\n\nThe token \"blue. \" ends an incomplete noun phrase (\"The term 'blue sky' refers to...\"), expecting continuation like \"a phenomenon\" or \"the color blue\" or \"the scientific explanation,\" completing the definition context about atmospheric scattering.\n\nFinal token \"blue. \" closes a quoted",
+          "conditioning_context": "<explanation>Structured Wikipedia-style article format with numbered list items describing a common phrase (\"Why is the sky blue?\"), establishing a pattern of defining or explaining the term \"blue sky.\"\n\nThe token \"blue. \" ends an incomplete noun phrase (\"The term 'blue sky' refers to...\"), strongly expecting continuation like \"a phenomenon\" or \"the color blue\" or \"the scientific explanation,\" completing the definition or explanation context about atmospheric scattering.\n\nFinal token \"blue. \"",
+          "activation_norm": 146.6597137451172
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9111829475245034
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.8870582489943151
+        }
+      ]
+    },
+    {
+      "prompt": "What is the capital of Australia?",
+      "layer_chain": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style format with structured metadata and a search query pattern (\"What: What is the capital of Canada?\"), suggesting a Wikipedia or similar platform's response.\n\nThe phrase \"The answer to 'What is Canada's\" implies a question or title field, likely completing a country fact or definition section about Canada's capital, with \"Canada\" expected as the subject.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"What:\"), part of a search result",
+          "conditioning_context": "",
+          "activation_norm": 94.06217193603516
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style metadata format with a search query pattern (\"What: What is the capital of Canada?\"), suggesting a platform or article structure with metadata fields.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"The answer to 'What:\"), part of a title or label field listing a search term, implying the word \"capital\" or \"country\" will follow, likely completing a definition or search result context.\n\nExample sentence structure: \"This page is a",
+          "conditioning_context": "<explanation>Wikipedia-style format with structured metadata and a search query pattern (\"What: What is the capital of Canada?\"), suggesting a Wikipedia or similar platform's response.\n\nThe phrase \"The answer to 'What is Canada's\" implies a question or title field, likely completing a country fact or definition section about Canada's capital, with \"Canada\" expected as the subject.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"What:\"), part of a search result",
+          "activation_norm": 112.12643432617188
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured metadata format with a Wikipedia-style search query pattern (\"What: What is the capital of Canada?\"), implying a platform or article metadata field with a title or label.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"The answer to 'What:\"), part of a metadata field listing a search term, strongly expecting continuation like \"capital\" or \"the question\" or \"search result\" or \"a country's\" to complete the definition context.\n\nExample",
+          "conditioning_context": "<explanation>Wikipedia-style metadata format with a search query pattern (\"What: What is the capital of Canada?\"), suggesting a platform or article structure with metadata fields.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"The answer to 'What:\"), part of a title or label field listing a search term, implying the word \"capital\" or \"country\" will follow, likely completing a definition or search result context.\n\nExample sentence structure: \"This page is a",
+          "activation_norm": 129.84793090820312
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "layers": [
+            19,
+            20
+          ],
+          "cosine": 0.9044135266908585
+        },
+        {
+          "layers": [
+            20,
+            21
+          ],
+          "cosine": 0.8893208184067054
+        }
+      ]
+    }
+  ],
+  "across_token": [
+    {
+      "prompt": "What is the derivative of x^2 sin(x)?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 38,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia article format with mathematical notation and search query structure (\"Find the derivative of f(x) = sin(x) * cos(x)\"), suggesting a calculus or math forum context.\n\nThe phrase \"The product rule is used to find the derivative\" implies a question or question title, likely a specific calculus problem or question label, followed by a parenthetical expression or answer format.\n\nFinal token \"5 nn\" ends an incomplete word mid-sentence (\"d multiplication",
+          "conditioning_context": "",
+          "activation_norm": 119.63175201416016
+        },
+        {
+          "prefix_length": 39,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Formal Wikipedia-style article structure with a search query pattern (\"Find the derivative of f(x) = sin(x) * cos(x)\"), suggesting a question or label format about a mathematical concept.\n\nFinal token \"5 nn\" is an incomplete word mid-sentence (\"The product rule is used to find the derivative\"), part of a parenthetical clause listing terms or a question label, likely continuing with \"a problem\" or \"the expression\" or \"of",
+          "conditioning_context": "<explanation>Wikipedia article format with mathematical notation and search query structure (\"Find the derivative of f(x) = sin(x) * cos(x)\"), suggesting a calculus or math forum context.\n\nThe phrase \"The product rule is used to find the derivative\" implies a question or question title, likely a specific calculus problem or question label, followed by a parenthetical expression or answer format.\n\nFinal token \"5 nn\" ends an incomplete word mid-sentence (\"d multiplication",
+          "activation_norm": 112.53702545166016
+        },
+        {
+          "prefix_length": 40,
+          "last_token": "\n",
+          "verbalization": "<explanation>Formal Wikipedia-style article structure with a search query pattern (\"Find the derivative of f(x) = sin(x) * cos(x)\"), establishing a question or label context about mathematical concepts.\n\nFinal token \"5 nn\" is an incomplete word mid-sentence (\"The product rule is used to find the derivative\"), part of a parenthetical clause listing terms or a label, likely continuing with \"a problem\" or \"the expression\" or \"of the function",
+          "conditioning_context": "<explanation>Formal Wikipedia-style article structure with a search query pattern (\"Find the derivative of f(x) = sin(x) * cos(x)\"), suggesting a question or label format about a mathematical concept.\n\nFinal token \"5 nn\" is an incomplete word mid-sentence (\"The product rule is used to find the derivative\"), part of a parenthetical clause listing terms or a question label, likely continuing with \"a problem\" or \"the expression\" or \"of",
+          "activation_norm": 122.71853637695312
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            38,
+            39
+          ],
+          "cosine": 0.43523265511916864
+        },
+        {
+          "prefix_lengths": [
+            39,
+            40
+          ],
+          "cosine": 0.7130038634321318
+        }
+      ]
+    },
+    {
+      "prompt": "Explain why gradient descent can get stuck in local minima.",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 40,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Structured wiki format with tags and metadata fields describing a machine learning concept, suggesting a definition or explanation of gradient descent.\n\nThe phrase \"A gradient descent algorithm is a method that follows the negative gradient direction\" implies an incomplete sentence or definition context, likely continuing with \"the gradient descent algorithm's behavior\" or \"direction of of the cost function.\"\n\nFinal token \"льненькостью\" ends mid-word (\"Gradient льненькостью\"), part of a parenthetical definition",
+          "conditioning_context": "",
+          "activation_norm": 116.30775451660156
+        },
+        {
+          "prefix_length": 41,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Structured wiki format with metadata tags and a definition section describing a machine learning concept, transitioning to a quoted or incomplete sentence about gradient descent.\n\nFinal token \"льнenkостью\" is an incomplete Russian word mid-sentence (\"Gradient льнenkость\"), likely part of a parenthetical or quoted definition clause, suggesting the word continues with \"of the cost function\" or similar phrase about the algorithm's behavior.\n\nThe token sequence \"_gradient_льнenkостью",
+          "conditioning_context": "<explanation>Structured wiki format with tags and metadata fields describing a machine learning concept, suggesting a definition or explanation of gradient descent.\n\nThe phrase \"A gradient descent algorithm is a method that follows the negative gradient direction\" implies an incomplete sentence or definition context, likely continuing with \"the gradient descent algorithm's behavior\" or \"direction of of the cost function.\"\n\nFinal token \"льненькостью\" ends mid-word (\"Gradient льненькостью\"), part of a parenthetical definition",
+          "activation_norm": 116.24666595458984
+        },
+        {
+          "prefix_length": 42,
+          "last_token": "\n",
+          "verbalization": "<explanation>Structured wiki format with metadata tags and a definition section describing a machine learning concept, transitioning to an incomplete quoted text about gradient descent.\n\nToken sequence \"льнenkость\" is a mid-word Russian term (\"Gradient льнenkость\"), likely part of a parenthetical or quoted definition clause, suggesting the word continues with \"of the cost function\" or similar phrase about the algorithm's behavior.\n\nFinal token \"ьнenkостью\" ends an incomplete Russian",
+          "conditioning_context": "<explanation>Structured wiki format with metadata tags and a definition section describing a machine learning concept, transitioning to a quoted or incomplete sentence about gradient descent.\n\nFinal token \"льнenkостью\" is an incomplete Russian word mid-sentence (\"Gradient льнenkость\"), likely part of a parenthetical or quoted definition clause, suggesting the word continues with \"of the cost function\" or similar phrase about the algorithm's behavior.\n\nThe token sequence \"_gradient_льнenkостью",
+          "activation_norm": 121.79840087890625
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            40,
+            41
+          ],
+          "cosine": 0.2946722607448749
+        },
+        {
+          "prefix_lengths": [
+            41,
+            42
+          ],
+          "cosine": 0.7030855540160456
+        }
+      ]
+    },
+    {
+      "prompt": "What were the main causes of World War I?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 37,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia article format with structured search result page, showing a definition of \"Balkan War\" with a query box suggesting historical context.\n\nThe phrase \"The term 'July Crisis' refers to the assassination of Archduke Franz Ferdinand\" implies a list or summary of causes or events related to World War I's origins, likely a historical encyclopedia entry about the July Crisis.\n\nFinal token \"Kaland\" ends mid-word (\"1898. ), Austria",
+          "conditioning_context": "",
+          "activation_norm": 115.8341064453125
+        },
+        {
+          "prefix_length": 38,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Structured Wikipedia format with a search result page displaying a definition and query box, followed by a historical term (\"Balkan War\") with a list of related terms.\n\nFinal token \"Kaland\" is an incomplete word mid-sentence (\"1898. ), Austria\"), part of a parenthetical definition or list of causes terms, suggesting the next word should complete a noun phrase like \"Kosovo\" or \"the term\" or \"a historical",
+          "conditioning_context": "<explanation>Wikipedia article format with structured search result page, showing a definition of \"Balkan War\" with a query box suggesting historical context.\n\nThe phrase \"The term 'July Crisis' refers to the assassination of Archduke Franz Ferdinand\" implies a list or summary of causes or events related to World War I's origins, likely a historical encyclopedia entry about the July Crisis.\n\nFinal token \"Kaland\" ends mid-word (\"1898. ), Austria",
+          "activation_norm": 116.6617660522461
+        },
+        {
+          "prefix_length": 39,
+          "last_token": "\n",
+          "verbalization": "<explanation>Structured Wikipedia format with a search result page layout showing a definition and query box, followed by a list of terms related to \"Balkan War,\" suggesting the text is describing a historical term or concept.\n\nFinal token \"Kaland\" is an incomplete word mid-sentence (\"1898. ), Austria\"), part of a parenthetical clause listing causes or definitions, likely continuing with a noun phrase like \"Kosovo\" or \"the term\"",
+          "conditioning_context": "<explanation>Structured Wikipedia format with a search result page displaying a definition and query box, followed by a historical term (\"Balkan War\") with a list of related terms.\n\nFinal token \"Kaland\" is an incomplete word mid-sentence (\"1898. ), Austria\"), part of a parenthetical definition or list of causes terms, suggesting the next word should complete a noun phrase like \"Kosovo\" or \"the term\" or \"a historical",
+          "activation_norm": 121.7635498046875
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            37,
+            38
+          ],
+          "cosine": 0.37059242290599226
+        },
+        {
+          "prefix_lengths": [
+            38,
+            39
+          ],
+          "cosine": 0.7164858366589268
+        }
+      ]
+    },
+    {
+      "prompt": "Is the number 97 prime?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 35,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia article format with numbered list structure defining a mathematical term \"Prime Number,\" suggesting a search or definition context.\n\nThe phrase \"A prime number is a number that is divisible only by 1 and itself\" implies a question or question about the factors of a given number, likely a numeric example or question about primality testing.\n\nFinal token \"льнан\" is mid-word (\"5888888888888888",
+          "conditioning_context": "",
+          "activation_norm": 118.05594635009766
+        },
+        {
+          "prefix_length": 36,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Wikipedia-style article format with numbered list structure and a search query context (\"Definition of Prime Number\"), suggesting a user interaction or definition section.\n\nFinal token \"льнан\" is an incomplete word mid-sentence (\"5888888888888888\"), likely part of a numeric example or question about prime factorization, implying a search term or question label.\n\nThe token sequence \"definition: \" suggests the next word is",
+          "conditioning_context": "<explanation>Wikipedia article format with numbered list structure defining a mathematical term \"Prime Number,\" suggesting a search or definition context.\n\nThe phrase \"A prime number is a number that is divisible only by 1 and itself\" implies a question or question about the factors of a given number, likely a numeric example or question about primality testing.\n\nFinal token \"льнан\" is mid-word (\"5888888888888888",
+          "activation_norm": 112.60529327392578
+        },
+        {
+          "prefix_length": 37,
+          "last_token": "\n",
+          "verbalization": "<explanation>Wikipedia-style article format with numbered list structure and a search query context (\"Definition of Prime Number\"), suggesting a user interaction or definition section.\n\nFinal token \"льнан\" is an incomplete word mid-sentence (\"5888888888888888\"), part of a numeric example or search term display, likely a Russian word or placeholder text.\n\nThe token sequence \"definition: \" signals a label or title field, expecting",
+          "conditioning_context": "<explanation>Wikipedia-style article format with numbered list structure and a search query context (\"Definition of Prime Number\"), suggesting a user interaction or definition section.\n\nFinal token \"льнан\" is an incomplete word mid-sentence (\"5888888888888888\"), likely part of a numeric example or question about prime factorization, implying a search term or question label.\n\nThe token sequence \"definition: \" suggests the next word is",
+          "activation_norm": 117.13065338134766
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            35,
+            36
+          ],
+          "cosine": 0.400921516804429
+        },
+        {
+          "prefix_lengths": [
+            36,
+            37
+          ],
+          "cosine": 0.6998127509975384
+        }
+      ]
+    },
+    {
+      "prompt": "Describe how attention mechanisms work in transformers.",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 35,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Structured format with Wikipedia-style metadata (\"Definition of Transformer\" and \"Tokenization\") suggests a technical or linguistic context about a model's attention mechanism.\n\nThe phrase \"A transformer model is a type of self-attention mechanism that performs the Attention\" implies an incomplete definition or list, likely continuing with \"the model's attention over input tokens\" or \"attention mechanism\" or \"contextual information.\"\n\nFinal token \"NN.\" ends mid-word (\"Attention.\"), part of a",
+          "conditioning_context": "",
+          "activation_norm": 118.83182525634766
+        },
+        {
+          "prefix_length": 36,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Structured metadata format with Wikipedia-style headers and definitions, transitioning from a definition context to a technical term (\"Transformer model\"), suggesting a list or explanation of the attention mechanism.\n\nFinal token \"NN.\" is a truncated abbreviation mid-word (\"Attention.\"), part of an incomplete phrase listing attributes (\"A transformer model is a type of self-attention mechanism that performs the Attention...\"), expecting continuation like \"token\" or \"model\" or \"process\" or \"is defined as\"",
+          "conditioning_context": "<explanation>Structured format with Wikipedia-style metadata (\"Definition of Transformer\" and \"Tokenization\") suggests a technical or linguistic context about a model's attention mechanism.\n\nThe phrase \"A transformer model is a type of self-attention mechanism that performs the Attention\" implies an incomplete definition or list, likely continuing with \"the model's attention over input tokens\" or \"attention mechanism\" or \"contextual information.\"\n\nFinal token \"NN.\" ends mid-word (\"Attention.\"), part of a",
+          "activation_norm": 116.65966033935547
+        },
+        {
+          "prefix_length": 37,
+          "last_token": "\n",
+          "verbalization": "<explanation>Structured metadata format with a Wikipedia-style definition section, transitioning from a header to a list or explanation of \"Transformer\" concept, with a specific term (\"Self-Attention\").\n\nFinal token \"NN.\" is an abbreviation mid-word (\"Attention.\"), part of an incomplete phrase listing attributes (\"A transformer model is a type of self-attention mechanism...\"), expecting continuation like \"token\" or \"model\" or \"process\" or \"is defined as\" or \"the process",
+          "conditioning_context": "<explanation>Structured metadata format with Wikipedia-style headers and definitions, transitioning from a definition context to a technical term (\"Transformer model\"), suggesting a list or explanation of the attention mechanism.\n\nFinal token \"NN.\" is a truncated abbreviation mid-word (\"Attention.\"), part of an incomplete phrase listing attributes (\"A transformer model is a type of self-attention mechanism that performs the Attention...\"), expecting continuation like \"token\" or \"model\" or \"process\" or \"is defined as\"",
+          "activation_norm": 122.48538970947266
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            35,
+            36
+          ],
+          "cosine": 0.330143657290512
+        },
+        {
+          "prefix_lengths": [
+            36,
+            37
+          ],
+          "cosine": 0.722854130680639
+        }
+      ]
+    },
+    {
+      "prompt": "What is 17 multiplied by 23?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 38,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia-style product format with a search result entry structure, showing a calculator tool for multiplying numbers.\n\nThe phrase \"Calculate: 12 × 15\" suggests a numeric multiplication question or a Wikipedia article title pattern, implying the answer is a product or product value, likely a product of those two numbers.\n\nFinal token \"mnition\" ends mid-word (\"Multiplication...\"), part of an incomplete list or definition context (\"Multiply: 12 ×",
+          "conditioning_context": "",
+          "activation_norm": 108.60977935791016
+        },
+        {
+          "prefix_length": 39,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Wikipedia-style format with a search result entry structure, showing a calculator tool description and a numeric example (\"Calculate: 12 × 15\"), implying the next token is a noun phrase or definition continuation.\n\nFinal token \"mnition\" is an incomplete word mid-sentence (\"Multiplication...\"), part of a list or definition context (\"The product:\"), strongly expecting a noun like \"product\" or \"definition\" or \"a number\" or \"",
+          "conditioning_context": "<explanation>Wikipedia-style product format with a search result entry structure, showing a calculator tool for multiplying numbers.\n\nThe phrase \"Calculate: 12 × 15\" suggests a numeric multiplication question or a Wikipedia article title pattern, implying the answer is a product or product value, likely a product of those two numbers.\n\nFinal token \"mnition\" ends mid-word (\"Multiplication...\"), part of an incomplete list or definition context (\"Multiply: 12 ×",
+          "activation_norm": 112.94493103027344
+        },
+        {
+          "prefix_length": 40,
+          "last_token": "\n",
+          "verbalization": "<explanation>Wikipedia-style format with a search result entry structure showing a calculator tool description, followed by a numbered list of terms definitions or examples.\n\nFinal token \"mnition\" is an incomplete word mid-sentence (\"The product...\"), part of a definition or label context (\"Search: Multiplication\"), strongly expecting a noun like \"product,\" \"definition,\" or \"is the result\" or \"of the operation\" to complete the phrase about the calculator's input.\n\nThe",
+          "conditioning_context": "<explanation>Wikipedia-style format with a search result entry structure, showing a calculator tool description and a numeric example (\"Calculate: 12 × 15\"), implying the next token is a noun phrase or definition continuation.\n\nFinal token \"mnition\" is an incomplete word mid-sentence (\"Multiplication...\"), part of a list or definition context (\"The product:\"), strongly expecting a noun like \"product\" or \"definition\" or \"a number\" or \"",
+          "activation_norm": 115.52727508544922
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            38,
+            39
+          ],
+          "cosine": 0.49871287514896057
+        },
+        {
+          "prefix_lengths": [
+            39,
+            40
+          ],
+          "cosine": 0.7242066442697174
+        }
+      ]
+    },
+    {
+      "prompt": "Why is the sky blue?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 33,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia article format with a search result entry describing \"Blue Sky\" phenomenon, suggesting a scientific or educational context about light scattering.\n\nThe phrase \"A term used to describe how sunlight appears blue\" implies a definition or explanation of the term \"Rayleigh scattering,\" likely followed by a list or description of atmospheric conditions or phenomena related to the color of sky.\n\nFinal token \"5 .\" ends an incomplete noun phrase (\"Sunlight 5. \"), part of a numbered",
+          "conditioning_context": "",
+          "activation_norm": 116.48299407958984
+        },
+        {
+          "prefix_length": 34,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Wikipedia-style article format with a search result entry structure (\"Definition of 'Blue Sky'\"), suggesting a list or definition context about atmospheric phenomena.\n\nFinal token \"5 .\" is an incomplete numbered item (\"Sunlight 5.\"), part of a list of terms or definitions phrases (\"A term used to describe how sunlight appears blue...\"), implying the next word should continue defining or describing the phenomenon or concept.\n\nExpected continuation: \"definition\" or \"a term\" or",
+          "conditioning_context": "<explanation>Wikipedia article format with a search result entry describing \"Blue Sky\" phenomenon, suggesting a scientific or educational context about light scattering.\n\nThe phrase \"A term used to describe how sunlight appears blue\" implies a definition or explanation of the term \"Rayleigh scattering,\" likely followed by a list or description of atmospheric conditions or phenomena related to the color of sky.\n\nFinal token \"5 .\" ends an incomplete noun phrase (\"Sunlight 5. \"), part of a numbered",
+          "activation_norm": 115.4435043334961
+        },
+        {
+          "prefix_length": 35,
+          "last_token": "\n",
+          "verbalization": "<explanation>Wikipedia-style article format with a search result entry structure (\"Definition of 'Blue Sky'\"), suggesting a list or definition context about atmospheric phenomena.\n\nFinal token \"5 .\" is an incomplete numbered item (\"Sunlight 5.\"), part of a list of terms or definitions phrases (\"A term used to describe how sunlight appears blue...\"), implying the next word should continue defining or describing the phenomenon or concept.\n\nExpected continuation: \"definition\" or \"The term\" or",
+          "conditioning_context": "<explanation>Wikipedia-style article format with a search result entry structure (\"Definition of 'Blue Sky'\"), suggesting a list or definition context about atmospheric phenomena.\n\nFinal token \"5 .\" is an incomplete numbered item (\"Sunlight 5.\"), part of a list of terms or definitions phrases (\"A term used to describe how sunlight appears blue...\"), implying the next word should continue defining or describing the phenomenon or concept.\n\nExpected continuation: \"definition\" or \"a term\" or",
+          "activation_norm": 122.38745880126953
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            33,
+            34
+          ],
+          "cosine": 0.3769054007357288
+        },
+        {
+          "prefix_lengths": [
+            34,
+            35
+          ],
+          "cosine": 0.7042023084294088
+        }
+      ]
+    },
+    {
+      "prompt": "What is the capital of Australia?",
+      "layer": 20,
+      "token_chain": [
+        {
+          "prefix_length": 34,
+          "last_token": "<|im_start|>",
+          "verbalization": "<explanation>Wikipedia article format with structured search results listing, following a pattern of country names and capital city descriptions.\n\nThe phrase \"Australia's capital is Canberra\" suggests a common question or question about the capital of Australia, implying a question or trivia question about the country's's official capital or administrative center.\n\nFinal token \"Capital.\" ends an incomplete noun phrase (\"The capital...\"), strongly expecting \"City of Canberra\" or \"Australia's capital is\" or \"The capital",
+          "conditioning_context": "",
+          "activation_norm": 109.26126861572266
+        },
+        {
+          "prefix_length": 35,
+          "last_token": "assistant",
+          "verbalization": "<explanation>Wikipedia-style search result format with a pattern of structured metadata entries about country capitals, establishing a question or trivia query pattern around \"Australia's capital.\"\n\nFinal token \"capital.\" ends an incomplete noun phrase (\"The capital...\"), strongly expecting a proper noun like \"City of Canberra\" or \"is the capital\" or \"of Australia,\" completing the question about the country's's official capital.\n\nThe token sequence \"capital.\" is part of a search result entry header",
+          "conditioning_context": "<explanation>Wikipedia article format with structured search results listing, following a pattern of country names and capital city descriptions.\n\nThe phrase \"Australia's capital is Canberra\" suggests a common question or question about the capital of Australia, implying a question or trivia question about the country's's official capital or administrative center.\n\nFinal token \"Capital.\" ends an incomplete noun phrase (\"The capital...\"), strongly expecting \"City of Canberra\" or \"Australia's capital is\" or \"The capital",
+          "activation_norm": 114.09083557128906
+        },
+        {
+          "prefix_length": 36,
+          "last_token": "\n",
+          "verbalization": "<explanation>Structured metadata format with Wikipedia-style search results pattern, showing a pattern of trivia or definition entries about country capitals.\n\nToken sequence \"capital.\" is an incomplete noun phrase (\"The capital...\"), strongly expecting a proper noun like \"City of Canberra\" or \"is the capital\" or \"of Australia,\" completing the query about the country's's official capital status.\n\nFinal token \"capital.\" ends a truncated noun phrase mid-sentence (\"The capital.\"), part of a search",
+          "conditioning_context": "<explanation>Wikipedia-style search result format with a pattern of structured metadata entries about country capitals, establishing a question or trivia query pattern around \"Australia's capital.\"\n\nFinal token \"capital.\" ends an incomplete noun phrase (\"The capital...\"), strongly expecting a proper noun like \"City of Canberra\" or \"is the capital\" or \"of Australia,\" completing the question about the country's's official capital.\n\nThe token sequence \"capital.\" is part of a search result entry header",
+          "activation_norm": 112.12643432617188
+        }
+      ],
+      "activation_cosine_adjacent": [
+        {
+          "prefix_lengths": [
+            34,
+            35
+          ],
+          "cosine": 0.388039893187924
+        },
+        {
+          "prefix_lengths": [
+            35,
+            36
+          ],
+          "cosine": 0.7169543302048706
+        }
+      ]
+    }
+  ],
+  "last_token": [
+    {
+      "prompt": "What is the derivative of x^2 sin(x)?",
+      "layer": 20,
+      "v_last": "<explanation>Formal mathematical/educational context with a question format (\"How to calculate the volume of a sphere\"), suggesting a platform or tool is being described.\n\nThe phrase \"This expression represents the derivative of a function\" implies a question or question title, likely a specific mathematical concept or example about combining terms or calculating a compound expression involving π.\n\nFinal token \"mathematics\" ends an incomplete noun phrase (\"What popular:\"), part of a title or label structure (\"What",
+      "next_token_id": 1249,
+      "next_token_text": "To",
+      "v_next": "<explanation>Product description format with structured metadata tags (\"Tag: Energy\") suggesting a Wikipedia or database entry about a numeric value or concept.\n\nThe phrase \"This is the monthly report of our company, to\" implies an incomplete noun phrase describing a broader context or title, likely a historical or conceptual tag for \"Oil Well\" or similar industrial term.\n\nFinal token \"To\" ends mid-phrase (\"Our history and values...\"), part of a list of \"Title: This",
+      "cos_act_last_vs_embed": -0.00293468799589455,
+      "jaccard_v_last_vs_v_next": 0.2391304347826087,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Formal mathematical/educational context with a wiki-style format, suggesting a step-by-step explanation or formula calculation.\n\nThe phrase \"To find the derivative of \\( \\sin(x) + \\cos(x) \\), is a question title or prompt, implying a question or question about combining trigonometric functions, likely a specific problem or definition of \"product rule.\"\n\nFinal token \"function\" ends an incomplete noun phrase (\"My name is Euler's\"), part of",
+          "cos_with_next_token_embed": 0.0007717014582910768,
+          "jaccard_with_v_next": 0.1956521739130435
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Formal mathematical/educational context with a question format (\"How to calculate the volume of a sphere\"), suggesting a platform or tool is being described.\n\nThe phrase \"This expression represents the derivative of a function\" implies a question or question title, likely a specific mathematical concept or example about combining terms or calculating a compound expression involving π.\n\nFinal token \"mathematics\" ends an incomplete noun phrase (\"What popular:\"), part of a title or label structure (\"What",
+          "cos_with_next_token_embed": -0.00293468799589455,
+          "jaccard_with_v_next": 0.2391304347826087
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Formal mathematical/technical question format with a search engine query structure (\"Calculate the derivative of sin(x) + cos(x)\") suggesting a Wikipedia or math forum context.\n\nThe phrase \"This expression is called 'sinh' and 'cosin' \" implies a question or question about calculating a compound trigonometric function, likely a specific mathematical concept or formula.\n\nFinal token \"math. \" ends an incomplete noun phrase (\"This is sin\"), part of a list",
+          "cos_with_next_token_embed": 0.001664161424135196,
+          "jaccard_with_v_next": 0.25274725274725274
+        }
+      ]
+    },
+    {
+      "prompt": "Explain why gradient descent can get stuck in local minima.",
+      "layer": 20,
+      "v_last": "<explanation>Structured wiki format with technical/academic context around \"Gradient Descent\" concept, suggesting a definition or explanation page.\n\nThe phrase \"The term 'Gradient Descent' is often misunderstood\" implies a section title or introductory clause about the concept's, likely followed by a definition or explanation of the phenomenon or process of gradient descent in machine learning.\n\nFinal token \"Descent\\n\" ends an incomplete noun phrase (\"You are not an example of\"), part of a list",
+      "next_token_id": 29369,
+      "next_token_text": "Gradient",
+      "v_next": "<explanation>Wikipedia article format with structured metadata tags (\"Category:Media\"), suggesting a search or reference context about a book title or concept.\n\nThe phrase \"An Indian railway station's name and appearance\" implies a query or definition pattern, likely a Wikipedia template or list of attributes for a specific season or month, with \"safety\" or \"seasonal\" implied as a noun phrase.\n\nFinal token \"anisational\" is mid-word (\"independent or seasonal\"),",
+      "cos_act_last_vs_embed": 0.006902871595471754,
+      "jaccard_v_last_vs_v_next": 0.20652173913043478,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with numbered sections describing a concept (\"What\"), suggesting a technical or educational article about neural networks or machine learning.\n\nThe phrase \"The term 'bias' in neural networks refers to...\" implies a definition or explanation section, likely continuing with a formal or informal description of bias in the context of neural network training or model behavior.\n\nFinal token \"bias\\n\" is mid-word (\"Anxiety...\"), part of an incomplete list or definition clause (\"The term",
+          "cos_with_next_token_embed": -0.00022498949244209829,
+          "jaccard_with_v_next": 0.2087912087912088
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured wiki format with technical/academic context around \"Gradient Descent\" concept, suggesting a definition or explanation page.\n\nThe phrase \"The term 'Gradient Descent' is often misunderstood\" implies a section title or introductory clause about the concept's, likely followed by a definition or explanation of the phenomenon or process of gradient descent in machine learning.\n\nFinal token \"Descent\\n\" ends an incomplete noun phrase (\"You are not an example of\"), part of a list",
+          "cos_with_next_token_embed": 0.006902871595471754,
+          "jaccard_with_v_next": 0.20652173913043478
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured format with a Wikipedia-style article definition, followed by a question description about gradient descent and its application in machine learning.\n\nThe phrase \"Gradient descent is not a mystery\" suggests a title or heading pattern, likely a section or section label (\"What\"), implying the next word completes a common term or concept about neural networks or optimization.\n\nFinal token \"sion\\n\" ends mid-word (\"Gradient descent\"), part of an incomplete list or definition context (\"Notable:",
+          "cos_with_next_token_embed": 0.008682831095747946,
+          "jaccard_with_v_next": 0.2127659574468085
+        }
+      ]
+    },
+    {
+      "prompt": "What were the main causes of World War I?",
+      "layer": 20,
+      "v_last": "<explanation>Wikipedia article format with structured content listing historical events and definitions, following a pattern of \"What is the Cold War\" with numbered sections.\n\nThe phrase \"The term 'Cold War' refers to\" signals a definition or summary section, likely continuing with a brief explanation of the concept's origins or characteristics of World War II's global conflict.\n\nFinal token \"war\" ends an incomplete noun phrase (\"You are not a Cold War\"), part of a list of topics",
+      "next_token_id": 10134,
+      "next_token_text": "World",
+      "v_next": "<explanation>Wikipedia article format with a search query pattern (\"What\"), suggesting a question or definition context about \"The Power of Visualization\" or similar.\n\nThe phrase \"The word 'Green' refers to the color green, but the world's\" implies an incomplete list or definition structure, likely a book title or concept about data or numbers, possibly a Wikipedia article about creativity or statistics.\n\nFinal token \"world\" ends mid-word in \"greenworld's\" — part of",
+      "cos_act_last_vs_embed": -0.01751332306249124,
+      "jaccard_v_last_vs_v_next": 0.22580645161290322,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia article format with structured content listing historical events and concepts related to the term \"NATO,\" suggesting a definition or summary page.\n\nThe phrase \"This article explores the causes and factors behind the Cold War\" implies a section title or opening statement, likely continuing with a list of key factors or historical context about NATO's formation or characteristics.\n\nFinal token \"war\" ends an incomplete noun phrase (\"You can understand...\"), part of a Wikipedia-style definition or summary",
+          "cos_with_next_token_embed": -0.01188070469974458,
+          "jaccard_with_v_next": 0.27586206896551724
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia article format with structured content listing historical events and definitions, following a pattern of \"What is the Cold War\" with numbered sections.\n\nThe phrase \"The term 'Cold War' refers to\" signals a definition or summary section, likely continuing with a brief explanation of the concept's origins or characteristics of World War II's global conflict.\n\nFinal token \"war\" ends an incomplete noun phrase (\"You are not a Cold War\"), part of a list of topics",
+          "cos_with_next_token_embed": -0.01751332306249124,
+          "jaccard_with_v_next": 0.22580645161290322
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Wikipedia article format with structured content listing causes of World War I, following a numbered list pattern.\n\nThe phrase \"The Causes of World War I\" suggests the article is introducing a summary or definition section about the war's causes, implying a closing or concluding section about the term \"Peaceful Revolution\" or similar historical context.\n\nFinal token \"War\\n\" ends an incomplete noun phrase (\"Peaceful\"), part of a title or label field (\"You are Peaceful",
+          "cos_with_next_token_embed": -0.0062173009136428994,
+          "jaccard_with_v_next": 0.2247191011235955
+        }
+      ]
+    },
+    {
+      "prompt": "Is the number 97 prime?",
+      "layer": 20,
+      "v_last": "<explanation>Wikipedia-style article format with numbered list structure, describing a mathematical concept \"Prime Number\" using a question tag.\n\nThe phrase \"To determine if 12345 is a prime number or not\" suggests a closing question or definition section, likely continuing the pattern of a numeric example or confirmation of the term's properties.\n\nFinal token \"number.\" ends an incomplete clause (\"12345 is...\"), part of a question question pattern (\"Is",
+      "next_token_id": 9454,
+      "next_token_text": "Yes",
+      "v_next": "<explanation>Wikipedia-style article format with a search result entry describing a book title, suggesting a query about \"stock market\" or \"corporate finance\" terms.\n\nThe phrase \"The term 'Korea' is\" implies an incomplete search result or question pattern, likely a Wikipedia article title or definition context about a specific economic concept or variable.\n\nFinal token \"Yes\" ends mid-sentence (\" The 'Korea' . Yes\"), part of a parenthetical clause",
+      "cos_act_last_vs_embed": 0.00919329830138506,
+      "jaccard_v_last_vs_v_next": 0.25609756097560976,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with a title and definition pattern, suggesting a mathematical or scientific context about \"123\" being a prime number.\n\nThe phrase \"Is the number 123 a prime number? Yes, it is\" implies a question or answer section, likely continuing with a confirmation or explanation of the number's properties or classification.\n\nFinal token \"number.\" ends an incomplete clause (\"123 is...\"), strongly expecting continuation like \"The number",
+          "cos_with_next_token_embed": 0.008354286380987366,
+          "jaccard_with_v_next": 0.2926829268292683
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style article format with numbered list structure, describing a mathematical concept \"Prime Number\" using a question tag.\n\nThe phrase \"To determine if 12345 is a prime number or not\" suggests a closing question or definition section, likely continuing the pattern of a numeric example or confirmation of the term's properties.\n\nFinal token \"number.\" ends an incomplete clause (\"12345 is...\"), part of a question question pattern (\"Is",
+          "cos_with_next_token_embed": 0.00919329830138506,
+          "jaccard_with_v_next": 0.25609756097560976
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured format with a Wikipedia-style definition entry, followed by a question tag (\"Is the number 123456789 a prime number?\"), implying a question or question response about the number's properties.\n\nThe phrase \"This is not a prime number\" suggests a closing question or answer section, likely a confirmation or explanation of whether the sequence \"123456789\" is prime or not, possibly with a numeric",
+          "cos_with_next_token_embed": 0.014348693662671465,
+          "jaccard_with_v_next": 0.13253012048192772
+        }
+      ]
+    },
+    {
+      "prompt": "Describe how attention mechanisms work in transformers.",
+      "layer": 20,
+      "v_last": "<explanation>Structured wiki format with a definition section followed by a question description, suggesting a Q&A or article format about \"Neural Networks\" or similar technical concept.\n\nThe phrase \"What: This term refers to...\" implies an incomplete or informal title or tag description, likely a Wikipedia-style or social media context, expecting a definition or explanation of neural networks' characteristics or usage.\n\nFinal token \"networks\" ends mid-phrase (\"This is...\"), part of an incomplete",
+      "next_token_id": 69329,
+      "next_token_text": "Attention",
+      "v_next": "<explanation>Wikipedia-style article format with structured metadata tags (\"Category:Business\" and \"Image:Stock\"), suggesting a search or encyclopedia entry about a business term.\n\nThe phrase \"Search. (Google) - (China)\" appears to be an incomplete or informal title or tag, likely referencing a stock market or business chart image, implying a pattern of \"Who's talking\" or \"Market trends\" context.\n\nFinal token \"Search. (Google\" opens an incomplete paren",
+      "cos_act_last_vs_embed": 0.008003266755584047,
+      "jaccard_v_last_vs_v_next": 0.19101123595505617,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Structured wiki format with a definition section followed by a \"About\" section, suggesting a platform or concept description about neural networks or AI.\n\nThe phrase \"This article explores the concept of Transformer architecture and its components\" implies a title or heading pattern, likely a Wikipedia-style or blog post format with a question or summary label like \"What is Transformer Model?\"\n\nFinal token \"Model\" ends an incomplete noun phrase (\"Understanding the Transformer architecture...\"), strongly expecting continuation like \"",
+          "cos_with_next_token_embed": 0.0013080088682719201,
+          "jaccard_with_v_next": 0.18085106382978725
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Structured wiki format with a definition section followed by a question description, suggesting a Q&A or article format about \"Neural Networks\" or similar technical concept.\n\nThe phrase \"What: This term refers to...\" implies an incomplete or informal title or tag description, likely a Wikipedia-style or social media context, expecting a definition or explanation of neural networks' characteristics or usage.\n\nFinal token \"networks\" ends mid-phrase (\"This is...\"), part of an incomplete",
+          "cos_with_next_token_embed": 0.008003266755584047,
+          "jaccard_with_v_next": 0.19101123595505617
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Structured wiki format with a definition section followed by a question description, suggesting a Q&A or article format about \"Graph Neural Networks\" or similar.\n\nThe phrase \"What is Graph Neural Networks?\" implies a title or heading, likely a playful or informal term like \"The Magic of Graphs\" or \"Understanding Graph Theory,\" signaling the article will explain the concept's.\n\nFinal token \"Networks\" ends an incomplete noun phrase (\"Understanding...\"), part of a list",
+          "cos_with_next_token_embed": 0.006678329651271009,
+          "jaccard_with_v_next": 0.19101123595505617
+        }
+      ]
+    },
+    {
+      "prompt": "What is 17 multiplied by 23?",
+      "layer": 20,
+      "v_last": "<explanation>Formal math/word problem format with a question label (\"Calculate the product of 12 and 5\"), suggesting a platform or tool is displaying a calculation result.\n\nThe phrase \"What is the product of 12 and 5?\" implies a question or question title, likely a word puzzle or educational context asking about the product value of the numbers.\n\nFinal token \"product\" ends an incomplete noun phrase (\"This is my calculation...\"), part of a",
+      "next_token_id": 1249,
+      "next_token_text": "To",
+      "v_next": "<explanation>Product description format with structured metadata tags (\"Tag: Energy\") suggesting a Wikipedia or database entry about a numeric value or concept.\n\nThe phrase \"This is the monthly report of our company, to\" implies an incomplete noun phrase describing a broader context or title, likely a historical or conceptual tag for \"Oil Well\" or similar industrial term.\n\nFinal token \"To\" ends mid-phrase (\"Our history and values...\"), part of a list of \"Title: This",
+      "cos_act_last_vs_embed": -0.02285492648474782,
+      "jaccard_v_last_vs_v_next": 0.27058823529411763,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style format with numbered list structure, presenting a mathematical or numerical question with \"What\" label.\n\nThe phrase \"To calculate the product of 12 and 8\" suggests a question or answer section is being introduced, likely a simple arithmetic calculation or a wordplay title about the number \"128,\" implying a result or explanation follows.\n\nFinal token \"8. \" ends an incomplete sentence (\"This is my multiplication...\"), part of a numbered",
+          "cos_with_next_token_embed": -0.013905458066818603,
+          "jaccard_with_v_next": 0.1875
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Formal math/word problem format with a question label (\"Calculate the product of 12 and 5\"), suggesting a platform or tool is displaying a calculation result.\n\nThe phrase \"What is the product of 12 and 5?\" implies a question or question title, likely a word puzzle or educational context asking about the product value of the numbers.\n\nFinal token \"product\" ends an incomplete noun phrase (\"This is my calculation...\"), part of a",
+          "cos_with_next_token_embed": -0.02285492648474782,
+          "jaccard_with_v_next": 0.27058823529411763
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Formal mathematical/numeric format with a question label (\"What\nuser:\"), suggesting a search or calculation tool displaying a product value.\n\nThe phrase \"Calculate 12 x\" implies a specific numeric result or definition, likely a product or multiplication problem about the word \"apple,\" implying a context of counting or calculating something related to \"12\" and \"banana.\"\n\nFinal token \"Mathematics\" ends an incomplete noun phrase (\"This is 12",
+          "cos_with_next_token_embed": -0.018516260475433304,
+          "jaccard_with_v_next": 0.22826086956521738
+        }
+      ]
+    },
+    {
+      "prompt": "Why is the sky blue?",
+      "layer": 20,
+      "v_last": "<explanation>Wikipedia-style article format with structured content describing a phenomenon (\"Why is the sky blue?\"), suggesting a definition or explanation section follows.\n\nThe phrase \"The term 'blue sky' refers to...\" implies a common expression or scientific explanation about atmospheric conditions, likely a Wikipedia article or similar resource listing reasons for blue skies.\n\nFinal token \"sky\" ends an incomplete noun phrase (\"Why is the blue\"), part of a list or definition header (\"The term 'blue sky",
+      "next_token_id": 785,
+      "next_token_text": "The",
+      "v_next": "<explanation>Wikipedia article format with structured metadata tags (\"Category:Mathematics\" and \"Category:Productivity\"), suggesting a search result or definition context about a phrase.\n\nThe phrase \"Search for #1234567890 . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .",
+      "cos_act_last_vs_embed": 0.005832852574394204,
+      "jaccard_v_last_vs_v_next": 0.17391304347826086,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content blocks describing \"Why is the sky blue,\" using a question-driven format with numbered points.\n\nThe phrase \"The term 'blue sky' refers to the phenomenon of the sky being blue\" signals a definition or explanation section, likely continuing with scientific facts about atmospheric scattering or color theory, suggesting the next word will complete a common phrase like \"The reason for this phenomenon is...\"\n\nFinal token \"blue. \" ends an incomplete noun",
+          "cos_with_next_token_embed": 0.013916294729328963,
+          "jaccard_with_v_next": 0.16
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content describing a phenomenon (\"Why is the sky blue?\"), suggesting a definition or explanation section follows.\n\nThe phrase \"The term 'blue sky' refers to...\" implies a common expression or scientific explanation about atmospheric conditions, likely a Wikipedia article or similar resource listing reasons for blue skies.\n\nFinal token \"sky\" ends an incomplete noun phrase (\"Why is the blue\"), part of a list or definition header (\"The term 'blue sky",
+          "cos_with_next_token_embed": 0.005832852574394204,
+          "jaccard_with_v_next": 0.17391304347826086
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content blocks describing the color blue, using a question or definition format.\n\nThe phrase \"Why is sky blue? \" suggests a common question or explanation section about the phenomenon of blue sky, likely followed by a scientific or cultural description of the color's appearance or causes, possibly including \"The sky appears blue because...\"\n\nFinal token \"blue.\" ends an incomplete noun phrase (\"Why is sky\"), part of a list or title structure (\"",
+          "cos_with_next_token_embed": 0.013192367593469206,
+          "jaccard_with_v_next": 0.13333333333333333
+        }
+      ]
+    },
+    {
+      "prompt": "What is the capital of Australia?",
+      "layer": 20,
+      "v_last": "<explanation>Wikipedia-style article format with structured content describing a country's capital, using bolded headers and numbered sections.\n\nThe phrase \"The name of the capital of China is Beijing\" signals a question or definition section, likely continuing with a formal or factual statement about the country's's capital status, implying the word \"China\" or \"the capital\" will be defined or described.\n\nFinal token \"China\" ends an incomplete noun phrase (\"My answer is...\"), part",
+      "next_token_id": 785,
+      "next_token_text": "The",
+      "v_next": "<explanation>Wikipedia article format with structured metadata tags (\"Category:Mathematics\" and \"Category:Productivity\"), suggesting a search result or definition context about a phrase.\n\nThe phrase \"Search for #1234567890 . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .  . . .",
+      "cos_act_last_vs_embed": 0.0032522609304511383,
+      "jaccard_v_last_vs_v_next": 0.15714285714285714,
+      "layer_sweep": [
+        {
+          "layer": 19,
+          "verbalization": "<explanation>Wikipedia-style format with structured metadata and a search query pattern (\"What: What is the capital of Canada?\"), suggesting a Wikipedia or similar platform's response.\n\nThe phrase \"The answer to 'What is Canada's\" implies a question or title field, likely completing a country fact or definition section about Canada's capital, with \"Canada\" expected as the subject.\n\nFinal token \"Canada\" ends an incomplete noun phrase (\"What:\"), part of a search result",
+          "cos_with_next_token_embed": 0.014262025032847061,
+          "jaccard_with_v_next": 0.21212121212121213
+        },
+        {
+          "layer": 20,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content describing a country's capital, using bolded headers and numbered sections.\n\nThe phrase \"The name of the capital of China is Beijing\" signals a question or definition section, likely continuing with a formal or factual statement about the country's's capital status, implying the word \"China\" or \"the capital\" will be defined or described.\n\nFinal token \"China\" ends an incomplete noun phrase (\"My answer is...\"), part",
+          "cos_with_next_token_embed": 0.0032522609304511383,
+          "jaccard_with_v_next": 0.15714285714285714
+        },
+        {
+          "layer": 21,
+          "verbalization": "<explanation>Wikipedia-style article format with structured content listing facts about a country's name, following a pattern of \"Capital\" and \"official language\" sections.\n\nThe phrase \"The capital of Canada is Ottawa\" signals a closing or incomplete definition, likely a humorous or factual statement about the country's name, suggesting the word \"Canada\" or \"the capital city\" is being defined.\n\nFinal token \"capital  \" ends an incomplete noun phrase (\"No.  \"), part",
+          "cos_with_next_token_embed": 0.004615118066674714,
+          "jaccard_with_v_next": 0.16666666666666666
+        }
+      ]
+    }
+  ]
+}
