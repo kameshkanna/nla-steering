@@ -373,15 +373,15 @@ def run_cross_layer_looping(
     results: list[dict] = []
 
     for prompt in tqdm(prompts, desc="[A] Cross-layer looping", dynamic_ncols=True):
-        chat_ids = tokenizer.apply_chat_template(
+        _fmt: str = tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}],
-            tokenize=True,
+            tokenize=False,
             add_generation_prompt=True,
-            return_tensors="pt",
         )
-        if hasattr(chat_ids, "input_ids"):
-            chat_ids = chat_ids.input_ids
-        chat_ids = chat_ids.to(device)
+        chat_ids = torch.tensor(
+            tokenizer.encode(_fmt, add_special_tokens=False),
+            dtype=torch.long, device=device,
+        ).unsqueeze(0)
         attn_mask = torch.ones_like(chat_ids)
 
         # Single forward pass captures all three layers
@@ -489,17 +489,12 @@ def run_across_token_looping(
     results: list[dict] = []
 
     for prompt in tqdm(prompts, desc="[B] Across-token looping", dynamic_ncols=True):
-        _chat_ids_raw = tokenizer.apply_chat_template(
+        _formatted: str = tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}],
-            tokenize=True,
+            tokenize=False,
             add_generation_prompt=True,
         )
-        # apply_chat_template may return a tokenizers.Encoding instead of list[int]
-        chat_ids_list: list[int] = (
-            _chat_ids_raw.ids
-            if hasattr(_chat_ids_raw, "ids")
-            else list(_chat_ids_raw)
-        )
+        chat_ids_list: list[int] = tokenizer.encode(_formatted, add_special_tokens=False)
         total_len = len(chat_ids_list)
 
         # We need at least `lookback` tokens available
@@ -625,15 +620,15 @@ def run_last_token_ablation(
     sweep_layers = [layer_idx - 1, layer_idx, layer_idx + 1]
 
     for prompt in tqdm(prompts, desc="[C] Last-token ablation", dynamic_ncols=True):
-        chat_ids = tokenizer.apply_chat_template(
+        _fmt: str = tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}],
-            tokenize=True,
+            tokenize=False,
             add_generation_prompt=True,
-            return_tensors="pt",
         )
-        if hasattr(chat_ids, "input_ids"):
-            chat_ids = chat_ids.input_ids
-        chat_ids = chat_ids.to(device)
+        chat_ids = torch.tensor(
+            tokenizer.encode(_fmt, add_special_tokens=False),
+            dtype=torch.long, device=device,
+        ).unsqueeze(0)
         attn_mask = torch.ones_like(chat_ids)
 
         # Extract last-token activation at the target layer and sweep layers
