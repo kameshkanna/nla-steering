@@ -219,8 +219,6 @@ class ConditionedHFVerbalizer:
             embeds: (N, max_seq_len, d_model) bfloat16
             attn_mask: (N, max_seq_len) long
         """
-        from nla_train.injection import inject_at_marked_positions
-
         N = len(activations)
         all_ids: list[torch.Tensor] = []
 
@@ -242,7 +240,6 @@ class ConditionedHFVerbalizer:
 
         for i, ids_t in enumerate(all_ids):
             seq_len = ids_t.shape[0]
-            # Left-pad: real tokens occupy the last seq_len positions
             padded_ids[i, max_len - seq_len :] = ids_t
             attn_mask[i, max_len - seq_len :] = 1
 
@@ -251,16 +248,36 @@ class ConditionedHFVerbalizer:
 
         embeds = self._embed_layer(padded_ids).clone()
 
+        # Inject activation vectors at the marked injection position for each batch item.
+        # Scans for [left_neighbor, injection_token, right_neighbor] triplet; falls back
+        # to first occurrence of injection_token_id if neighbors don't match.
+        ids_np = padded_ids.cpu().numpy()
         act_tensor = torch.tensor(activations, dtype=embeds.dtype, device=self._device)
-        embeds = inject_at_marked_positions(
-            input_ids=padded_ids,
-            embeddings=embeds,
-            activation_vectors=act_tensor,
-            injection_token_id=self._injection_token_id,
-            left_neighbor_id=self._left_neighbor_id,
-            right_neighbor_id=self._right_neighbor_id,
-            injection_scale=self._injection_scale,
-        )
+        for b in range(N):
+            inject_pos: Optional[int] = None
+            seq = ids_np[b]
+            for j in range(1, len(seq) - 1):
+                if (
+                    seq[j] == self._injection_token_id
+                    and seq[j - 1] == self._left_neighbor_id
+                    and seq[j + 1] == self._right_neighbor_id
+                ):
+                    inject_pos = j
+                    break
+            if inject_pos is None:
+                candidates = (seq == self._injection_token_id).nonzero()[0]
+                if len(candidates) == 0:
+                    raise RuntimeError(
+                        f"Injection token {self._injection_token_id} not found in prompt "
+                        f"for batch item {b}."
+                    )
+                inject_pos = int(candidates[0])
+            act = act_tensor[b].float()
+            norm = act.norm()
+            if norm > 1e-8:
+                act = act / norm
+            embeds[b, inject_pos] = (act * self._injection_scale).to(embeds.dtype)
+
         return embeds, attn_mask
 
     @torch.no_grad()
