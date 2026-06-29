@@ -328,8 +328,13 @@ class ConditionedHFVerbalizer:
             # Slice off the prompt positions — only decode newly generated tokens
             new_ids = ids[prompt_len:] if ids.shape[0] > prompt_len else ids
             raw = self._tokenizer.decode(new_ids, skip_special_tokens=True)
+            # Try closed tag first, then open-only (truncated by max_new_tokens), then raw
             m = re.search(r"<explanation>(.*?)</explanation>", raw, re.DOTALL)
-            descriptions.append(m.group(1).strip() if m else raw.strip())
+            if m:
+                descriptions.append(m.group(1).strip())
+            else:
+                m2 = re.search(r"<explanation>(.*)", raw, re.DOTALL)
+                descriptions.append(m2.group(1).strip() if m2 else raw.strip())
 
         del embeds, out_ids
         gc.collect()
@@ -498,11 +503,19 @@ def run_across_token_looping(
             add_generation_prompt=True,
         )
         chat_ids_list: list[int] = tokenizer.encode(_formatted, add_special_tokens=False)
-        total_len = len(chat_ids_list)
 
-        # We need at least `lookback` tokens available
-        start = max(1, total_len - lookback + 1)
-        token_positions = list(range(start, total_len + 1))  # prefix lengths
+        # Anchor lookback to the end of the user message content, not the generation
+        # prompt suffix (<|im_start|>assistant\n). Get length without generation prompt
+        # so we look back through the actual prompt tokens.
+        _fmt_no_gen: str = tokenizer.apply_chat_template(
+            [{"role": "user", "content": prompt}],
+            tokenize=False,
+            add_generation_prompt=False,
+        )
+        user_len = len(tokenizer.encode(_fmt_no_gen, add_special_tokens=False))
+
+        start = max(1, user_len - lookback + 1)
+        token_positions = list(range(start, user_len + 1))  # prefix lengths within user turn
 
         chain: list[dict] = []
         prior_context = ""
@@ -604,23 +617,18 @@ def run_last_token_ablation(
     For each prompt:
       1. Verbalize the last-token residual stream at layer_idx → V_last
       2. Decode the model's greedy next-token prediction → token_pred
-      3. Verbalize the embedding of token_pred (injected as if it were an activation) → V_next
-      4. Compute:
-           - Cosine similarity between the raw activation vectors
-           - Token-level Jaccard overlap between V_last and V_next text
-      5. Also verbalize at each of layers [layer_idx-1, layer_idx, layer_idx+1]
-         without conditioning, to measure layer-wise convergence toward next token.
+      3. Verbalize the embedding of token_pred → V_next
+      4. Compute cosine similarity between act_last and embed(token_pred), and
+         Jaccard text overlap between V_last and V_next.
 
-    The key metric: if the residual stream at layer L is "committed" to the next
-    token, cos(act_last, embed(next_token)) should be high and the verbalizations
-    should share vocabulary. If it is still in superposition, both metrics are low.
+    Low cosine + low Jaccard = residual stream still in superposition at layer_idx.
+    High = model is committed to the next token.
 
-    Returns:
-        List of result dicts, one per prompt.
+    Layer sweep is omitted — layers 19–21 are geometrically compatible (cosine > 0.91)
+    so their verbalizations and metrics are near-identical by construction.
     """
     embed_layer = model.get_input_embeddings()
     results: list[dict] = []
-    sweep_layers = [layer_idx - 1, layer_idx, layer_idx + 1]
 
     for prompt in tqdm(prompts, desc="[C] Last-token ablation", dynamic_ncols=True):
         _fmt: str = tokenizer.apply_chat_template(
@@ -634,9 +642,7 @@ def run_last_token_ablation(
         ).unsqueeze(0)
         attn_mask = torch.ones_like(chat_ids)
 
-        # Extract last-token activation at the target layer and sweep layers
-        all_layers = list(set(sweep_layers))
-        layer_acts = extract_activations(model, chat_ids, all_layers, attn_mask)
+        layer_acts = extract_activations(model, chat_ids, [layer_idx], attn_mask)
         act_last = layer_acts[layer_idx][0].cpu().float().numpy()  # (d_model,)
 
         # Greedy next-token prediction
@@ -645,62 +651,27 @@ def run_last_token_ablation(
         next_token_id = int(logits[0, -1, :].argmax(dim=-1).item())
         next_token_text = tokenizer.decode([next_token_id])
 
-        # Embedding of the predicted next token (d_model,) float32
         next_token_embed = (
             embed_layer(torch.tensor([next_token_id], device=device))
-            .squeeze(0)
-            .detach()
-            .float()
-            .cpu()
-            .numpy()
+            .squeeze(0).detach().float().cpu().numpy()
         )
 
-        # Verbalize last-token activation (no conditioning)
         v_last = verbalizer.verbalize(act_last, prior_context="", max_new_tokens=max_new_tokens)
 
-        # Verbalize next-token embedding — inject the embedding directly as if
-        # it were a residual stream activation. Scale to match the NLA's expected
-        # injection_scale so the injection magnitude is comparable.
         embed_norm = float(np.linalg.norm(next_token_embed))
-        if embed_norm > 1e-8:
-            next_token_embed_scaled = next_token_embed * (
-                verbalizer._injection_scale / embed_norm
-            )
-        else:
-            next_token_embed_scaled = next_token_embed
+        next_token_embed_scaled = (
+            next_token_embed * (verbalizer._injection_scale / embed_norm)
+            if embed_norm > 1e-8 else next_token_embed
+        )
         v_next = verbalizer.verbalize(
             next_token_embed_scaled, prior_context="", max_new_tokens=max_new_tokens
         )
 
-        # Cosine similarity between act_last and next_token_embed (raw, unnormalized)
         cos_act_embed = float(
             np.dot(act_last, next_token_embed)
             / (np.linalg.norm(act_last) * np.linalg.norm(next_token_embed) + 1e-8)
         )
-
-        # Jaccard unigram overlap between the two verbalization texts
         text_overlap = _token_overlap(v_last, v_next)
-
-        # Layer-sweep verbalizations (no conditioning, for convergence analysis)
-        sweep_results: list[dict] = []
-        for sweep_l in sweep_layers:
-            if sweep_l < 0 or sweep_l not in layer_acts:
-                continue
-            act_sweep = layer_acts[sweep_l][0].cpu().float().numpy()
-            v_sweep = verbalizer.verbalize(
-                act_sweep, prior_context="", max_new_tokens=max_new_tokens
-            )
-            cos_sweep_embed = float(
-                np.dot(act_sweep, next_token_embed)
-                / (np.linalg.norm(act_sweep) * np.linalg.norm(next_token_embed) + 1e-8)
-            )
-            overlap_sweep = _token_overlap(v_sweep, v_next)
-            sweep_results.append({
-                "layer": sweep_l,
-                "verbalization": v_sweep,
-                "cos_with_next_token_embed": cos_sweep_embed,
-                "jaccard_with_v_next": overlap_sweep,
-            })
 
         results.append({
             "prompt": prompt,
@@ -711,10 +682,8 @@ def run_last_token_ablation(
             "v_next": v_next,
             "cos_act_last_vs_embed": cos_act_embed,
             "jaccard_v_last_vs_v_next": text_overlap,
-            "layer_sweep": sweep_results,
         })
 
-        # Rich display
         console.rule(f"[bold yellow][C] Last-token ablation: {prompt[:60]}[/bold yellow]")
         console.print(f"  [dim]V_last (layer {layer_idx}):[/dim]  {v_last[:100]}")
         console.print(f"  [dim]Next token:[/dim]          {repr(next_token_text)}")
@@ -723,20 +692,6 @@ def run_last_token_ablation(
             f"  [cyan]cos(act_last, embed(t+1)) = {cos_act_embed:.4f}[/cyan]  "
             f"[magenta]Jaccard = {text_overlap:.4f}[/magenta]"
         )
-
-        t = Table(box=box.SIMPLE_HEAD, show_lines=False, title="Layer sweep vs. next token")
-        t.add_column("Layer", style="cyan", width=7)
-        t.add_column("cos(sweep, embed)", style="magenta", width=18)
-        t.add_column("Jaccard vs V_next", style="yellow", width=18)
-        t.add_column("Verbalization", style="white", max_width=60)
-        for sr in sweep_results:
-            t.add_row(
-                str(sr["layer"]),
-                f"{sr['cos_with_next_token_embed']:.4f}",
-                f"{sr['jaccard_with_v_next']:.4f}",
-                sr["verbalization"][:60],
-            )
-        console.print(t)
 
     return results
 
