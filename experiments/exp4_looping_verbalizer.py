@@ -489,10 +489,16 @@ def run_across_token_looping(
     results: list[dict] = []
 
     for prompt in tqdm(prompts, desc="[B] Across-token looping", dynamic_ncols=True):
-        chat_ids_list: list[int] = tokenizer.apply_chat_template(
+        _chat_ids_raw = tokenizer.apply_chat_template(
             [{"role": "user", "content": prompt}],
             tokenize=True,
             add_generation_prompt=True,
+        )
+        # apply_chat_template may return a tokenizers.Encoding instead of list[int]
+        chat_ids_list: list[int] = (
+            _chat_ids_raw.ids
+            if hasattr(_chat_ids_raw, "ids")
+            else list(_chat_ids_raw)
         )
         total_len = len(chat_ids_list)
 
