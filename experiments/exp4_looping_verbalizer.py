@@ -129,10 +129,18 @@ class ConditionedHFVerbalizer:
         self,
         base_model_name: str,
         av_checkpoint: str,
-        nla_meta_path: str,
         tokenizer: AutoTokenizer,
         device: torch.device,
+        nla_meta_path: Optional[str] = None,
     ) -> None:
+        # Resolve meta path: explicit arg → checkpoint dir → error
+        if nla_meta_path is None:
+            nla_meta_path = str(Path(av_checkpoint) / "nla_meta.yaml")
+        if not Path(nla_meta_path).exists():
+            raise FileNotFoundError(
+                f"nla_meta.yaml not found at {nla_meta_path}. "
+                "Pass --nla-meta explicitly or ensure the checkpoint dir contains nla_meta.yaml."
+            )
         with open(nla_meta_path) as f:
             self._meta = yaml.safe_load(f)
 
@@ -704,7 +712,11 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct")
     p.add_argument("--av-checkpoint", required=True)
-    p.add_argument("--nla-meta", required=True, help="Path to nla_meta_av.yaml")
+    p.add_argument(
+        "--nla-meta",
+        default=None,
+        help="Path to nla_meta.yaml. Defaults to <av-checkpoint>/nla_meta.yaml.",
+    )
     p.add_argument(
         "--sub-experiments",
         nargs="+",
@@ -762,9 +774,9 @@ def run(args: argparse.Namespace) -> None:
     verbalizer = ConditionedHFVerbalizer(
         base_model_name=args.model,
         av_checkpoint=args.av_checkpoint,
-        nla_meta_path=args.nla_meta,
         tokenizer=tokenizer,
         device=device,
+        nla_meta_path=args.nla_meta,
     )
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
