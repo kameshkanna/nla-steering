@@ -312,6 +312,7 @@ class ConditionedHFVerbalizer:
 
         embeds, attn_mask = self._build_embeds(activations, prior_contexts)
 
+        prompt_len = embeds.shape[1]
         do_sample = temperature > 0.0
         out_ids = self._av_model.generate(
             inputs_embeds=embeds,
@@ -324,7 +325,9 @@ class ConditionedHFVerbalizer:
 
         descriptions: list[str] = []
         for ids in out_ids:
-            raw = self._tokenizer.decode(ids, skip_special_tokens=True)
+            # Slice off the prompt positions — only decode newly generated tokens
+            new_ids = ids[prompt_len:] if ids.shape[0] > prompt_len else ids
+            raw = self._tokenizer.decode(new_ids, skip_special_tokens=True)
             m = re.search(r"<explanation>(.*?)</explanation>", raw, re.DOTALL)
             descriptions.append(m.group(1).strip() if m else raw.strip())
 
