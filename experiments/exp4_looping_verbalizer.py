@@ -133,13 +133,24 @@ class ConditionedHFVerbalizer:
         device: torch.device,
         nla_meta_path: Optional[str] = None,
     ) -> None:
-        # Resolve meta path: explicit arg → checkpoint dir → error
+        # Resolve meta path:
+        #   1. explicit --nla-meta arg
+        #   2. <checkpoint>/nla_meta.yaml  (kitft released checkpoints)
+        #   3. data/labeled/nla_meta_av.yaml  (nla-train pipeline default)
         if nla_meta_path is None:
-            nla_meta_path = str(Path(av_checkpoint) / "nla_meta.yaml")
-        if not Path(nla_meta_path).exists():
+            candidates = [
+                Path(av_checkpoint) / "nla_meta.yaml",
+                Path("data/labeled/nla_meta_av.yaml"),
+            ]
+            for candidate in candidates:
+                if candidate.exists():
+                    nla_meta_path = str(candidate)
+                    break
+        if nla_meta_path is None or not Path(nla_meta_path).exists():
             raise FileNotFoundError(
-                f"nla_meta.yaml not found at {nla_meta_path}. "
-                "Pass --nla-meta explicitly or ensure the checkpoint dir contains nla_meta.yaml."
+                "nla_meta.yaml not found. Tried: "
+                f"{Path(av_checkpoint) / 'nla_meta.yaml'}, data/labeled/nla_meta_av.yaml. "
+                "Pass --nla-meta explicitly."
             )
         with open(nla_meta_path) as f:
             self._meta = yaml.safe_load(f)
