@@ -32,3 +32,11 @@ experiments:
     caa_coefficient: 2.0
     max_new_tokens: 200
     output: results/llama70b_exp3_narrative.jsonl
+
+  exp4:
+    sub_experiments: [cross_layer, across_token, last_token]
+    layers: [52, 53, 54]             # cross-layer looping window around L53
+    nla_layer: 53
+    lookback: 3
+    verbalize_max_tokens: 96
+    output: results/llama70b_exp4_looping.jsonl

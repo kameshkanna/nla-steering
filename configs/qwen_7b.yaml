@@ -32,3 +32,11 @@ experiments:
     caa_coefficient: 2.0
     max_new_tokens: 200
     output: results/exp3_narrative.jsonl
+
+  exp4:
+    sub_experiments: [cross_layer, across_token, last_token]
+    layers: [19, 20, 21]             # cross-layer looping window
+    nla_layer: 20                    # central layer for across-token + last-token
+    lookback: 3                      # token positions for across-token looping
+    verbalize_max_tokens: 96
+    output: results/exp4_looping.jsonl

@@ -31,3 +31,11 @@ experiments:
     caa_coefficient: 2.0
     max_new_tokens: 200
     output: results/gemma12b_exp3_narrative.jsonl
+
+  exp4:
+    sub_experiments: [cross_layer, across_token, last_token]
+    layers: [31, 32, 33]             # cross-layer looping window around L32
+    nla_layer: 32
+    lookback: 3
+    verbalize_max_tokens: 96
+    output: results/gemma12b_exp4_looping.jsonl

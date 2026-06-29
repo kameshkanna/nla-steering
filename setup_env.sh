@@ -29,22 +29,31 @@ pip install --quiet \
 
 echo "==> Installing transformers + PEFT + accelerate"
 pip install --quiet \
-    "transformers==4.47.0" \
-    "peft==0.14.0" \
-    "accelerate==1.2.1"
+    "transformers>=4.47.0" \
+    "peft>=0.14.0" \
+    "accelerate>=1.2.1"
 
 echo "==> Installing data + util deps"
 pip install --quiet \
+    "safetensors>=0.4.0" \
     "numpy>=1.26.0" \
     "scipy>=1.13.0" \
     "scikit-learn>=1.4.0" \
-    "pandas>=2.2.0" \
-    "tqdm>=4.66.0" \
+    "httpx>=0.27.0" \
     "pyyaml>=6.0" \
-    "safetensors>=0.4.0" \
+    "orjson>=3.9.0" \
+    "tqdm>=4.66.0" \
+    "datasets>=2.20.0" \
+    "pandas>=2.2.0" \
+    "matplotlib>=3.9.0" \
+    "seaborn>=0.13.0" \
+    "rich>=13.7.0" \
+    "repeng>=0.1.0" \
     "tokenizers>=0.20.0" \
-    "huggingface_hub>=0.24.0" \
-    "matplotlib>=3.8.0"
+    "huggingface_hub>=0.24.0"
+
+echo "==> Installing SGLang"
+pip install --quiet "sglang[all]>=0.5.6"
 
 echo "==> Installing this package in editable mode"
 pip install --quiet -e .
